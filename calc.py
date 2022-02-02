@@ -25,6 +25,8 @@ reserved = {
     'floor' : 'FLOOR',
     'round' : 'ROUND',
     'ceil' : 'CEIL',
+    'env' : 'ENV',
+    'print' : 'PRINT',
  }
 
 # Create a list to hold all of the token names
@@ -99,9 +101,14 @@ def t_NAME(t):
         t.type = 'NAME'
     return t
 
+def t_ENV(t):
+    r'env'
+    global env
+    print(env)
+
 # Skip the current token and output 'Illegal characters' using the special Ply t_error function.
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print("Illegal character '%s' " % t.value[0])
     t.lexer.skip(1)
 
 # Build the lexer
@@ -112,7 +119,8 @@ lexer = lex.lex()
 precedence = (
 
     ('left', 'PLUS', 'MINUS'),
-    ('left', 'MULTIPLY', 'DIVIDE')
+    ('left', 'MULTIPLY', 'DIVIDE'),
+    ('left', 'POWER')
 
 )
 
@@ -121,17 +129,24 @@ def p_calc(p):
     '''
     calc : expression
          | var_assign
+         | function
          | empty
     '''
-    print(run(p[1]))
+    run(p[1])
+
+def p_function_print(p):
+    '''
+    function : PRINT LPAREN expression RPAREN
+    '''
+    p[0] = ('print', p[3])
 
 def p_array(p):
     '''
     expression : LBRACKET array_elements RBRACKET
     '''
-    p[0] = np.array(p[2])
+    p[0] = np.array(p[2], dtype=np.float64)
 
-def p_array_array_elements(p):
+def p_array_elements(p):
     '''
     array_elements : expression COMMA array_elements
                    | expression
@@ -248,9 +263,9 @@ def run(p):
         elif p[0] == '^':
             return run(p[1]) ** run(p[2])
         elif p[0] == '=':
-            print(p[1], p[2])
             env[p[1]] = run(p[2])
-            return ''
+        elif p[0] == 'print':
+            print(run(p[1]))            
         elif p[0] == 'var':
             if p[1] not in env:
                 return 'Undeclared variable found!'
@@ -261,8 +276,10 @@ def run(p):
 
 # Create a REPL to provide a way to interface with our calculator.
 tokenize = False
+acces_by_file = False
 
-while True:
+
+while not acces_by_file:
     try:
         s = input('Sigma>> ')
     except EOFError:
@@ -276,4 +293,12 @@ while True:
             if not tok:
                 break
             print(tok)
+
+##read a file and parse it
+if acces_by_file:
+    with open('test.txt') as f:
+        for line in f:
+            parser.parse(line)
+
+
     
