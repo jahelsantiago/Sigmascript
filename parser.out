@@ -38,10 +38,11 @@ Rule 19    expression -> expression MULTIPLY expression
 Rule 20    expression -> expression DIVIDE expression
 Rule 21    expression -> expression PLUS expression
 Rule 22    expression -> expression MINUS expression
-Rule 23    expression -> INT
-Rule 24    expression -> FLOAT
-Rule 25    expression -> NAME
-Rule 26    empty -> <empty>
+Rule 23    expression -> expression POWER expression
+Rule 24    expression -> INT
+Rule 25    expression -> FLOAT
+Rule 26    expression -> NAME
+Rule 27    empty -> <empty>
 
 Terminals, with rules where they appear
 
@@ -57,19 +58,20 @@ E                    :
 ELSE                 : 
 EQUALS               : 7
 EXP                  : 
-FLOAT                : 24
+FLOAT                : 25
 FLOOR                : 16
 IF                   : 
-INT                  : 23
+INT                  : 24
 LBRACE               : 
 LBRACKET             : 4
 LOG                  : 
 LPAREN               : 8 9 10 11 12 13 14 15 16 17 18
 MINUS                : 22
 MULTIPLY             : 19
-NAME                 : 7 25
+NAME                 : 7 26
 PI                   : 
 PLUS                 : 21
+POWER                : 23
 RBRACE               : 
 RBRACKET             : 4
 ROUND                : 17
@@ -86,7 +88,7 @@ Nonterminals, with rules where they appear
 array_elements       : 4 5
 calc                 : 0
 empty                : 3
-expression           : 1 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 19 20 20 21 21 22 22
+expression           : 1 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 19 20 20 21 21 22 22 23 23
 var_assign           : 2
 
 Parsing method: LALR
@@ -113,11 +115,12 @@ state 0
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
     (7) var_assign -> . NAME EQUALS expression
-    (26) empty -> .
+    (27) empty -> .
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -134,7 +137,7 @@ state 0
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
     NAME            shift and go to state 19
-    $end            reduce using rule 26 (empty -> .)
+    $end            reduce using rule 27 (empty -> .)
 
     calc                           shift and go to state 1
     expression                     shift and go to state 2
@@ -154,12 +157,14 @@ state 2
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     $end            reduce using rule 1 (calc -> expression .)
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 3
@@ -197,9 +202,10 @@ state 5
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -215,127 +221,130 @@ state 5
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    array_elements                 shift and go to state 24
-    expression                     shift and go to state 25
+    array_elements                 shift and go to state 25
+    expression                     shift and go to state 26
 
 state 6
 
     (8) expression -> SIN . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 27
+    LPAREN          shift and go to state 28
 
 
 state 7
 
     (9) expression -> COS . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 28
+    LPAREN          shift and go to state 29
 
 
 state 8
 
     (10) expression -> TAN . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 29
+    LPAREN          shift and go to state 30
 
 
 state 9
 
     (11) expression -> SQRT . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 30
+    LPAREN          shift and go to state 31
 
 
 state 10
 
     (12) expression -> ARCSIN . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 31
+    LPAREN          shift and go to state 32
 
 
 state 11
 
     (13) expression -> ARCCOS . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 32
+    LPAREN          shift and go to state 33
 
 
 state 12
 
     (14) expression -> ARCTAN . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 33
+    LPAREN          shift and go to state 34
 
 
 state 13
 
     (15) expression -> ABS . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 34
+    LPAREN          shift and go to state 35
 
 
 state 14
 
     (16) expression -> FLOOR . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 35
+    LPAREN          shift and go to state 36
 
 
 state 15
 
     (17) expression -> ROUND . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 36
+    LPAREN          shift and go to state 37
 
 
 state 16
 
     (18) expression -> CEIL . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 37
+    LPAREN          shift and go to state 38
 
 
 state 17
 
-    (23) expression -> INT .
+    (24) expression -> INT .
 
-    MULTIPLY        reduce using rule 23 (expression -> INT .)
-    DIVIDE          reduce using rule 23 (expression -> INT .)
-    PLUS            reduce using rule 23 (expression -> INT .)
-    MINUS           reduce using rule 23 (expression -> INT .)
-    $end            reduce using rule 23 (expression -> INT .)
-    COMMA           reduce using rule 23 (expression -> INT .)
-    RBRACKET        reduce using rule 23 (expression -> INT .)
-    RPAREN          reduce using rule 23 (expression -> INT .)
+    MULTIPLY        reduce using rule 24 (expression -> INT .)
+    DIVIDE          reduce using rule 24 (expression -> INT .)
+    PLUS            reduce using rule 24 (expression -> INT .)
+    MINUS           reduce using rule 24 (expression -> INT .)
+    POWER           reduce using rule 24 (expression -> INT .)
+    $end            reduce using rule 24 (expression -> INT .)
+    COMMA           reduce using rule 24 (expression -> INT .)
+    RBRACKET        reduce using rule 24 (expression -> INT .)
+    RPAREN          reduce using rule 24 (expression -> INT .)
 
 
 state 18
 
-    (24) expression -> FLOAT .
+    (25) expression -> FLOAT .
 
-    MULTIPLY        reduce using rule 24 (expression -> FLOAT .)
-    DIVIDE          reduce using rule 24 (expression -> FLOAT .)
-    PLUS            reduce using rule 24 (expression -> FLOAT .)
-    MINUS           reduce using rule 24 (expression -> FLOAT .)
-    $end            reduce using rule 24 (expression -> FLOAT .)
-    COMMA           reduce using rule 24 (expression -> FLOAT .)
-    RBRACKET        reduce using rule 24 (expression -> FLOAT .)
-    RPAREN          reduce using rule 24 (expression -> FLOAT .)
+    MULTIPLY        reduce using rule 25 (expression -> FLOAT .)
+    DIVIDE          reduce using rule 25 (expression -> FLOAT .)
+    PLUS            reduce using rule 25 (expression -> FLOAT .)
+    MINUS           reduce using rule 25 (expression -> FLOAT .)
+    POWER           reduce using rule 25 (expression -> FLOAT .)
+    $end            reduce using rule 25 (expression -> FLOAT .)
+    COMMA           reduce using rule 25 (expression -> FLOAT .)
+    RBRACKET        reduce using rule 25 (expression -> FLOAT .)
+    RPAREN          reduce using rule 25 (expression -> FLOAT .)
 
 
 state 19
 
-    (25) expression -> NAME .
+    (26) expression -> NAME .
     (7) var_assign -> NAME . EQUALS expression
 
-    MULTIPLY        reduce using rule 25 (expression -> NAME .)
-    DIVIDE          reduce using rule 25 (expression -> NAME .)
-    PLUS            reduce using rule 25 (expression -> NAME .)
-    MINUS           reduce using rule 25 (expression -> NAME .)
-    $end            reduce using rule 25 (expression -> NAME .)
-    EQUALS          shift and go to state 38
+    MULTIPLY        reduce using rule 26 (expression -> NAME .)
+    DIVIDE          reduce using rule 26 (expression -> NAME .)
+    PLUS            reduce using rule 26 (expression -> NAME .)
+    MINUS           reduce using rule 26 (expression -> NAME .)
+    POWER           reduce using rule 26 (expression -> NAME .)
+    $end            reduce using rule 26 (expression -> NAME .)
+    EQUALS          shift and go to state 39
 
 
 state 20
@@ -357,9 +366,10 @@ state 20
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -375,9 +385,9 @@ state 20
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 39
+    expression                     shift and go to state 40
 
 state 21
 
@@ -398,9 +408,10 @@ state 21
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -416,9 +427,9 @@ state 21
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 40
+    expression                     shift and go to state 41
 
 state 22
 
@@ -439,9 +450,10 @@ state 22
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -457,9 +469,9 @@ state 22
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 41
+    expression                     shift and go to state 42
 
 state 23
 
@@ -480,9 +492,10 @@ state 23
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -498,18 +511,60 @@ state 23
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 42
+    expression                     shift and go to state 43
 
 state 24
 
-    (4) expression -> LBRACKET array_elements . RBRACKET
+    (23) expression -> expression POWER . expression
+    (4) expression -> . LBRACKET array_elements RBRACKET
+    (8) expression -> . SIN LPAREN expression RPAREN
+    (9) expression -> . COS LPAREN expression RPAREN
+    (10) expression -> . TAN LPAREN expression RPAREN
+    (11) expression -> . SQRT LPAREN expression RPAREN
+    (12) expression -> . ARCSIN LPAREN expression RPAREN
+    (13) expression -> . ARCCOS LPAREN expression RPAREN
+    (14) expression -> . ARCTAN LPAREN expression RPAREN
+    (15) expression -> . ABS LPAREN expression RPAREN
+    (16) expression -> . FLOOR LPAREN expression RPAREN
+    (17) expression -> . ROUND LPAREN expression RPAREN
+    (18) expression -> . CEIL LPAREN expression RPAREN
+    (19) expression -> . expression MULTIPLY expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression PLUS expression
+    (22) expression -> . expression MINUS expression
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
-    RBRACKET        shift and go to state 43
+    LBRACKET        shift and go to state 5
+    SIN             shift and go to state 6
+    COS             shift and go to state 7
+    TAN             shift and go to state 8
+    SQRT            shift and go to state 9
+    ARCSIN          shift and go to state 10
+    ARCCOS          shift and go to state 11
+    ARCTAN          shift and go to state 12
+    ABS             shift and go to state 13
+    FLOOR           shift and go to state 14
+    ROUND           shift and go to state 15
+    CEIL            shift and go to state 16
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    NAME            shift and go to state 27
 
+    expression                     shift and go to state 44
 
 state 25
+
+    (4) expression -> LBRACKET array_elements . RBRACKET
+
+    RBRACKET        shift and go to state 45
+
+
+state 26
 
     (5) array_elements -> expression . COMMA array_elements
     (6) array_elements -> expression .
@@ -517,30 +572,33 @@ state 25
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
-    COMMA           shift and go to state 44
+    COMMA           shift and go to state 46
     RBRACKET        reduce using rule 6 (array_elements -> expression .)
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
-
-
-state 26
-
-    (25) expression -> NAME .
-
-    COMMA           reduce using rule 25 (expression -> NAME .)
-    MULTIPLY        reduce using rule 25 (expression -> NAME .)
-    DIVIDE          reduce using rule 25 (expression -> NAME .)
-    PLUS            reduce using rule 25 (expression -> NAME .)
-    MINUS           reduce using rule 25 (expression -> NAME .)
-    RBRACKET        reduce using rule 25 (expression -> NAME .)
-    $end            reduce using rule 25 (expression -> NAME .)
-    RPAREN          reduce using rule 25 (expression -> NAME .)
+    POWER           shift and go to state 24
 
 
 state 27
+
+    (26) expression -> NAME .
+
+    COMMA           reduce using rule 26 (expression -> NAME .)
+    MULTIPLY        reduce using rule 26 (expression -> NAME .)
+    DIVIDE          reduce using rule 26 (expression -> NAME .)
+    PLUS            reduce using rule 26 (expression -> NAME .)
+    MINUS           reduce using rule 26 (expression -> NAME .)
+    POWER           reduce using rule 26 (expression -> NAME .)
+    RBRACKET        reduce using rule 26 (expression -> NAME .)
+    $end            reduce using rule 26 (expression -> NAME .)
+    RPAREN          reduce using rule 26 (expression -> NAME .)
+
+
+state 28
 
     (8) expression -> SIN LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -559,9 +617,10 @@ state 27
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -577,11 +636,11 @@ state 27
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 45
+    expression                     shift and go to state 47
 
-state 28
+state 29
 
     (9) expression -> COS LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -600,9 +659,10 @@ state 28
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -618,11 +678,11 @@ state 28
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 46
+    expression                     shift and go to state 48
 
-state 29
+state 30
 
     (10) expression -> TAN LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -641,9 +701,10 @@ state 29
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -659,11 +720,11 @@ state 29
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 47
+    expression                     shift and go to state 49
 
-state 30
+state 31
 
     (11) expression -> SQRT LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -682,9 +743,10 @@ state 30
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -700,11 +762,11 @@ state 30
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 48
+    expression                     shift and go to state 50
 
-state 31
+state 32
 
     (12) expression -> ARCSIN LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -723,9 +785,10 @@ state 31
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -741,11 +804,11 @@ state 31
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 49
+    expression                     shift and go to state 51
 
-state 32
+state 33
 
     (13) expression -> ARCCOS LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -764,9 +827,10 @@ state 32
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -782,11 +846,11 @@ state 32
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 50
+    expression                     shift and go to state 52
 
-state 33
+state 34
 
     (14) expression -> ARCTAN LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -805,9 +869,10 @@ state 33
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -823,11 +888,11 @@ state 33
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 51
+    expression                     shift and go to state 53
 
-state 34
+state 35
 
     (15) expression -> ABS LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -846,9 +911,10 @@ state 34
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -864,11 +930,11 @@ state 34
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 52
+    expression                     shift and go to state 54
 
-state 35
+state 36
 
     (16) expression -> FLOOR LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -887,9 +953,10 @@ state 35
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -905,11 +972,11 @@ state 35
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 53
+    expression                     shift and go to state 55
 
-state 36
+state 37
 
     (17) expression -> ROUND LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -928,9 +995,10 @@ state 36
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -946,11 +1014,11 @@ state 36
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 54
+    expression                     shift and go to state 56
 
-state 37
+state 38
 
     (18) expression -> CEIL LPAREN . expression RPAREN
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -969,9 +1037,10 @@ state 37
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -987,11 +1056,11 @@ state 37
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 55
+    expression                     shift and go to state 57
 
-state 38
+state 39
 
     (7) var_assign -> NAME EQUALS . expression
     (4) expression -> . LBRACKET array_elements RBRACKET
@@ -1010,9 +1079,10 @@ state 38
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -1028,22 +1098,24 @@ state 38
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 56
+    expression                     shift and go to state 58
 
-state 39
+state 40
 
     (19) expression -> expression MULTIPLY expression .
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     MULTIPLY        reduce using rule 19 (expression -> expression MULTIPLY expression .)
     DIVIDE          reduce using rule 19 (expression -> expression MULTIPLY expression .)
     PLUS            reduce using rule 19 (expression -> expression MULTIPLY expression .)
     MINUS           reduce using rule 19 (expression -> expression MULTIPLY expression .)
+    POWER           reduce using rule 19 (expression -> expression MULTIPLY expression .)
     $end            reduce using rule 19 (expression -> expression MULTIPLY expression .)
     COMMA           reduce using rule 19 (expression -> expression MULTIPLY expression .)
     RBRACKET        reduce using rule 19 (expression -> expression MULTIPLY expression .)
@@ -1053,20 +1125,23 @@ state 39
   ! DIVIDE          [ shift and go to state 21 ]
   ! PLUS            [ shift and go to state 22 ]
   ! MINUS           [ shift and go to state 23 ]
+  ! POWER           [ shift and go to state 24 ]
 
 
-state 40
+state 41
 
     (20) expression -> expression DIVIDE expression .
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     MULTIPLY        reduce using rule 20 (expression -> expression DIVIDE expression .)
     DIVIDE          reduce using rule 20 (expression -> expression DIVIDE expression .)
     PLUS            reduce using rule 20 (expression -> expression DIVIDE expression .)
     MINUS           reduce using rule 20 (expression -> expression DIVIDE expression .)
+    POWER           reduce using rule 20 (expression -> expression DIVIDE expression .)
     $end            reduce using rule 20 (expression -> expression DIVIDE expression .)
     COMMA           reduce using rule 20 (expression -> expression DIVIDE expression .)
     RBRACKET        reduce using rule 20 (expression -> expression DIVIDE expression .)
@@ -1076,18 +1151,21 @@ state 40
   ! DIVIDE          [ shift and go to state 21 ]
   ! PLUS            [ shift and go to state 22 ]
   ! MINUS           [ shift and go to state 23 ]
+  ! POWER           [ shift and go to state 24 ]
 
 
-state 41
+state 42
 
     (21) expression -> expression PLUS expression .
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     PLUS            reduce using rule 21 (expression -> expression PLUS expression .)
     MINUS           reduce using rule 21 (expression -> expression PLUS expression .)
+    POWER           reduce using rule 21 (expression -> expression PLUS expression .)
     $end            reduce using rule 21 (expression -> expression PLUS expression .)
     COMMA           reduce using rule 21 (expression -> expression PLUS expression .)
     RBRACKET        reduce using rule 21 (expression -> expression PLUS expression .)
@@ -1099,18 +1177,21 @@ state 41
   ! DIVIDE          [ reduce using rule 21 (expression -> expression PLUS expression .) ]
   ! PLUS            [ shift and go to state 22 ]
   ! MINUS           [ shift and go to state 23 ]
+  ! POWER           [ shift and go to state 24 ]
 
 
-state 42
+state 43
 
     (22) expression -> expression MINUS expression .
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     PLUS            reduce using rule 22 (expression -> expression MINUS expression .)
     MINUS           reduce using rule 22 (expression -> expression MINUS expression .)
+    POWER           reduce using rule 22 (expression -> expression MINUS expression .)
     $end            reduce using rule 22 (expression -> expression MINUS expression .)
     COMMA           reduce using rule 22 (expression -> expression MINUS expression .)
     RBRACKET        reduce using rule 22 (expression -> expression MINUS expression .)
@@ -1122,9 +1203,41 @@ state 42
   ! DIVIDE          [ reduce using rule 22 (expression -> expression MINUS expression .) ]
   ! PLUS            [ shift and go to state 22 ]
   ! MINUS           [ shift and go to state 23 ]
+  ! POWER           [ shift and go to state 24 ]
 
 
-state 43
+state 44
+
+    (23) expression -> expression POWER expression .
+    (19) expression -> expression . MULTIPLY expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . PLUS expression
+    (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
+
+  ! shift/reduce conflict for MULTIPLY resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for POWER resolved as shift
+    $end            reduce using rule 23 (expression -> expression POWER expression .)
+    COMMA           reduce using rule 23 (expression -> expression POWER expression .)
+    RBRACKET        reduce using rule 23 (expression -> expression POWER expression .)
+    RPAREN          reduce using rule 23 (expression -> expression POWER expression .)
+    MULTIPLY        shift and go to state 20
+    DIVIDE          shift and go to state 21
+    PLUS            shift and go to state 22
+    MINUS           shift and go to state 23
+    POWER           shift and go to state 24
+
+  ! MULTIPLY        [ reduce using rule 23 (expression -> expression POWER expression .) ]
+  ! DIVIDE          [ reduce using rule 23 (expression -> expression POWER expression .) ]
+  ! PLUS            [ reduce using rule 23 (expression -> expression POWER expression .) ]
+  ! MINUS           [ reduce using rule 23 (expression -> expression POWER expression .) ]
+  ! POWER           [ reduce using rule 23 (expression -> expression POWER expression .) ]
+
+
+state 45
 
     (4) expression -> LBRACKET array_elements RBRACKET .
 
@@ -1132,13 +1245,14 @@ state 43
     DIVIDE          reduce using rule 4 (expression -> LBRACKET array_elements RBRACKET .)
     PLUS            reduce using rule 4 (expression -> LBRACKET array_elements RBRACKET .)
     MINUS           reduce using rule 4 (expression -> LBRACKET array_elements RBRACKET .)
+    POWER           reduce using rule 4 (expression -> LBRACKET array_elements RBRACKET .)
     $end            reduce using rule 4 (expression -> LBRACKET array_elements RBRACKET .)
     COMMA           reduce using rule 4 (expression -> LBRACKET array_elements RBRACKET .)
     RBRACKET        reduce using rule 4 (expression -> LBRACKET array_elements RBRACKET .)
     RPAREN          reduce using rule 4 (expression -> LBRACKET array_elements RBRACKET .)
 
 
-state 44
+state 46
 
     (5) array_elements -> expression COMMA . array_elements
     (5) array_elements -> . expression COMMA array_elements
@@ -1159,9 +1273,10 @@ state 44
     (20) expression -> . expression DIVIDE expression
     (21) expression -> . expression PLUS expression
     (22) expression -> . expression MINUS expression
-    (23) expression -> . INT
-    (24) expression -> . FLOAT
-    (25) expression -> . NAME
+    (23) expression -> . expression POWER expression
+    (24) expression -> . INT
+    (25) expression -> . FLOAT
+    (26) expression -> . NAME
 
     LBRACKET        shift and go to state 5
     SIN             shift and go to state 6
@@ -1177,199 +1292,223 @@ state 44
     CEIL            shift and go to state 16
     INT             shift and go to state 17
     FLOAT           shift and go to state 18
-    NAME            shift and go to state 26
+    NAME            shift and go to state 27
 
-    expression                     shift and go to state 25
-    array_elements                 shift and go to state 57
+    expression                     shift and go to state 26
+    array_elements                 shift and go to state 59
 
-state 45
+state 47
 
     (8) expression -> SIN LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
-
-    RPAREN          shift and go to state 58
-    MULTIPLY        shift and go to state 20
-    DIVIDE          shift and go to state 21
-    PLUS            shift and go to state 22
-    MINUS           shift and go to state 23
-
-
-state 46
-
-    (9) expression -> COS LPAREN expression . RPAREN
-    (19) expression -> expression . MULTIPLY expression
-    (20) expression -> expression . DIVIDE expression
-    (21) expression -> expression . PLUS expression
-    (22) expression -> expression . MINUS expression
-
-    RPAREN          shift and go to state 59
-    MULTIPLY        shift and go to state 20
-    DIVIDE          shift and go to state 21
-    PLUS            shift and go to state 22
-    MINUS           shift and go to state 23
-
-
-state 47
-
-    (10) expression -> TAN LPAREN expression . RPAREN
-    (19) expression -> expression . MULTIPLY expression
-    (20) expression -> expression . DIVIDE expression
-    (21) expression -> expression . PLUS expression
-    (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 60
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 48
 
-    (11) expression -> SQRT LPAREN expression . RPAREN
+    (9) expression -> COS LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 61
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 49
 
-    (12) expression -> ARCSIN LPAREN expression . RPAREN
+    (10) expression -> TAN LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 62
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 50
 
-    (13) expression -> ARCCOS LPAREN expression . RPAREN
+    (11) expression -> SQRT LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 63
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 51
 
-    (14) expression -> ARCTAN LPAREN expression . RPAREN
+    (12) expression -> ARCSIN LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 64
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 52
 
-    (15) expression -> ABS LPAREN expression . RPAREN
+    (13) expression -> ARCCOS LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 65
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 53
 
-    (16) expression -> FLOOR LPAREN expression . RPAREN
+    (14) expression -> ARCTAN LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 66
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 54
 
-    (17) expression -> ROUND LPAREN expression . RPAREN
+    (15) expression -> ABS LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 67
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 55
 
-    (18) expression -> CEIL LPAREN expression . RPAREN
+    (16) expression -> FLOOR LPAREN expression . RPAREN
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     RPAREN          shift and go to state 68
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
 state 56
+
+    (17) expression -> ROUND LPAREN expression . RPAREN
+    (19) expression -> expression . MULTIPLY expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . PLUS expression
+    (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
+
+    RPAREN          shift and go to state 69
+    MULTIPLY        shift and go to state 20
+    DIVIDE          shift and go to state 21
+    PLUS            shift and go to state 22
+    MINUS           shift and go to state 23
+    POWER           shift and go to state 24
+
+
+state 57
+
+    (18) expression -> CEIL LPAREN expression . RPAREN
+    (19) expression -> expression . MULTIPLY expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . PLUS expression
+    (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
+
+    RPAREN          shift and go to state 70
+    MULTIPLY        shift and go to state 20
+    DIVIDE          shift and go to state 21
+    PLUS            shift and go to state 22
+    MINUS           shift and go to state 23
+    POWER           shift and go to state 24
+
+
+state 58
 
     (7) var_assign -> NAME EQUALS expression .
     (19) expression -> expression . MULTIPLY expression
     (20) expression -> expression . DIVIDE expression
     (21) expression -> expression . PLUS expression
     (22) expression -> expression . MINUS expression
+    (23) expression -> expression . POWER expression
 
     $end            reduce using rule 7 (var_assign -> NAME EQUALS expression .)
     MULTIPLY        shift and go to state 20
     DIVIDE          shift and go to state 21
     PLUS            shift and go to state 22
     MINUS           shift and go to state 23
+    POWER           shift and go to state 24
 
 
-state 57
+state 59
 
     (5) array_elements -> expression COMMA array_elements .
 
     RBRACKET        reduce using rule 5 (array_elements -> expression COMMA array_elements .)
 
 
-state 58
+state 60
 
     (8) expression -> SIN LPAREN expression RPAREN .
 
@@ -1377,13 +1516,14 @@ state 58
     DIVIDE          reduce using rule 8 (expression -> SIN LPAREN expression RPAREN .)
     PLUS            reduce using rule 8 (expression -> SIN LPAREN expression RPAREN .)
     MINUS           reduce using rule 8 (expression -> SIN LPAREN expression RPAREN .)
+    POWER           reduce using rule 8 (expression -> SIN LPAREN expression RPAREN .)
     $end            reduce using rule 8 (expression -> SIN LPAREN expression RPAREN .)
     COMMA           reduce using rule 8 (expression -> SIN LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 8 (expression -> SIN LPAREN expression RPAREN .)
     RPAREN          reduce using rule 8 (expression -> SIN LPAREN expression RPAREN .)
 
 
-state 59
+state 61
 
     (9) expression -> COS LPAREN expression RPAREN .
 
@@ -1391,13 +1531,14 @@ state 59
     DIVIDE          reduce using rule 9 (expression -> COS LPAREN expression RPAREN .)
     PLUS            reduce using rule 9 (expression -> COS LPAREN expression RPAREN .)
     MINUS           reduce using rule 9 (expression -> COS LPAREN expression RPAREN .)
+    POWER           reduce using rule 9 (expression -> COS LPAREN expression RPAREN .)
     $end            reduce using rule 9 (expression -> COS LPAREN expression RPAREN .)
     COMMA           reduce using rule 9 (expression -> COS LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 9 (expression -> COS LPAREN expression RPAREN .)
     RPAREN          reduce using rule 9 (expression -> COS LPAREN expression RPAREN .)
 
 
-state 60
+state 62
 
     (10) expression -> TAN LPAREN expression RPAREN .
 
@@ -1405,13 +1546,14 @@ state 60
     DIVIDE          reduce using rule 10 (expression -> TAN LPAREN expression RPAREN .)
     PLUS            reduce using rule 10 (expression -> TAN LPAREN expression RPAREN .)
     MINUS           reduce using rule 10 (expression -> TAN LPAREN expression RPAREN .)
+    POWER           reduce using rule 10 (expression -> TAN LPAREN expression RPAREN .)
     $end            reduce using rule 10 (expression -> TAN LPAREN expression RPAREN .)
     COMMA           reduce using rule 10 (expression -> TAN LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 10 (expression -> TAN LPAREN expression RPAREN .)
     RPAREN          reduce using rule 10 (expression -> TAN LPAREN expression RPAREN .)
 
 
-state 61
+state 63
 
     (11) expression -> SQRT LPAREN expression RPAREN .
 
@@ -1419,13 +1561,14 @@ state 61
     DIVIDE          reduce using rule 11 (expression -> SQRT LPAREN expression RPAREN .)
     PLUS            reduce using rule 11 (expression -> SQRT LPAREN expression RPAREN .)
     MINUS           reduce using rule 11 (expression -> SQRT LPAREN expression RPAREN .)
+    POWER           reduce using rule 11 (expression -> SQRT LPAREN expression RPAREN .)
     $end            reduce using rule 11 (expression -> SQRT LPAREN expression RPAREN .)
     COMMA           reduce using rule 11 (expression -> SQRT LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 11 (expression -> SQRT LPAREN expression RPAREN .)
     RPAREN          reduce using rule 11 (expression -> SQRT LPAREN expression RPAREN .)
 
 
-state 62
+state 64
 
     (12) expression -> ARCSIN LPAREN expression RPAREN .
 
@@ -1433,13 +1576,14 @@ state 62
     DIVIDE          reduce using rule 12 (expression -> ARCSIN LPAREN expression RPAREN .)
     PLUS            reduce using rule 12 (expression -> ARCSIN LPAREN expression RPAREN .)
     MINUS           reduce using rule 12 (expression -> ARCSIN LPAREN expression RPAREN .)
+    POWER           reduce using rule 12 (expression -> ARCSIN LPAREN expression RPAREN .)
     $end            reduce using rule 12 (expression -> ARCSIN LPAREN expression RPAREN .)
     COMMA           reduce using rule 12 (expression -> ARCSIN LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 12 (expression -> ARCSIN LPAREN expression RPAREN .)
     RPAREN          reduce using rule 12 (expression -> ARCSIN LPAREN expression RPAREN .)
 
 
-state 63
+state 65
 
     (13) expression -> ARCCOS LPAREN expression RPAREN .
 
@@ -1447,13 +1591,14 @@ state 63
     DIVIDE          reduce using rule 13 (expression -> ARCCOS LPAREN expression RPAREN .)
     PLUS            reduce using rule 13 (expression -> ARCCOS LPAREN expression RPAREN .)
     MINUS           reduce using rule 13 (expression -> ARCCOS LPAREN expression RPAREN .)
+    POWER           reduce using rule 13 (expression -> ARCCOS LPAREN expression RPAREN .)
     $end            reduce using rule 13 (expression -> ARCCOS LPAREN expression RPAREN .)
     COMMA           reduce using rule 13 (expression -> ARCCOS LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 13 (expression -> ARCCOS LPAREN expression RPAREN .)
     RPAREN          reduce using rule 13 (expression -> ARCCOS LPAREN expression RPAREN .)
 
 
-state 64
+state 66
 
     (14) expression -> ARCTAN LPAREN expression RPAREN .
 
@@ -1461,13 +1606,14 @@ state 64
     DIVIDE          reduce using rule 14 (expression -> ARCTAN LPAREN expression RPAREN .)
     PLUS            reduce using rule 14 (expression -> ARCTAN LPAREN expression RPAREN .)
     MINUS           reduce using rule 14 (expression -> ARCTAN LPAREN expression RPAREN .)
+    POWER           reduce using rule 14 (expression -> ARCTAN LPAREN expression RPAREN .)
     $end            reduce using rule 14 (expression -> ARCTAN LPAREN expression RPAREN .)
     COMMA           reduce using rule 14 (expression -> ARCTAN LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 14 (expression -> ARCTAN LPAREN expression RPAREN .)
     RPAREN          reduce using rule 14 (expression -> ARCTAN LPAREN expression RPAREN .)
 
 
-state 65
+state 67
 
     (15) expression -> ABS LPAREN expression RPAREN .
 
@@ -1475,13 +1621,14 @@ state 65
     DIVIDE          reduce using rule 15 (expression -> ABS LPAREN expression RPAREN .)
     PLUS            reduce using rule 15 (expression -> ABS LPAREN expression RPAREN .)
     MINUS           reduce using rule 15 (expression -> ABS LPAREN expression RPAREN .)
+    POWER           reduce using rule 15 (expression -> ABS LPAREN expression RPAREN .)
     $end            reduce using rule 15 (expression -> ABS LPAREN expression RPAREN .)
     COMMA           reduce using rule 15 (expression -> ABS LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 15 (expression -> ABS LPAREN expression RPAREN .)
     RPAREN          reduce using rule 15 (expression -> ABS LPAREN expression RPAREN .)
 
 
-state 66
+state 68
 
     (16) expression -> FLOOR LPAREN expression RPAREN .
 
@@ -1489,13 +1636,14 @@ state 66
     DIVIDE          reduce using rule 16 (expression -> FLOOR LPAREN expression RPAREN .)
     PLUS            reduce using rule 16 (expression -> FLOOR LPAREN expression RPAREN .)
     MINUS           reduce using rule 16 (expression -> FLOOR LPAREN expression RPAREN .)
+    POWER           reduce using rule 16 (expression -> FLOOR LPAREN expression RPAREN .)
     $end            reduce using rule 16 (expression -> FLOOR LPAREN expression RPAREN .)
     COMMA           reduce using rule 16 (expression -> FLOOR LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 16 (expression -> FLOOR LPAREN expression RPAREN .)
     RPAREN          reduce using rule 16 (expression -> FLOOR LPAREN expression RPAREN .)
 
 
-state 67
+state 69
 
     (17) expression -> ROUND LPAREN expression RPAREN .
 
@@ -1503,13 +1651,14 @@ state 67
     DIVIDE          reduce using rule 17 (expression -> ROUND LPAREN expression RPAREN .)
     PLUS            reduce using rule 17 (expression -> ROUND LPAREN expression RPAREN .)
     MINUS           reduce using rule 17 (expression -> ROUND LPAREN expression RPAREN .)
+    POWER           reduce using rule 17 (expression -> ROUND LPAREN expression RPAREN .)
     $end            reduce using rule 17 (expression -> ROUND LPAREN expression RPAREN .)
     COMMA           reduce using rule 17 (expression -> ROUND LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 17 (expression -> ROUND LPAREN expression RPAREN .)
     RPAREN          reduce using rule 17 (expression -> ROUND LPAREN expression RPAREN .)
 
 
-state 68
+state 70
 
     (18) expression -> CEIL LPAREN expression RPAREN .
 
@@ -1517,8 +1666,17 @@ state 68
     DIVIDE          reduce using rule 18 (expression -> CEIL LPAREN expression RPAREN .)
     PLUS            reduce using rule 18 (expression -> CEIL LPAREN expression RPAREN .)
     MINUS           reduce using rule 18 (expression -> CEIL LPAREN expression RPAREN .)
+    POWER           reduce using rule 18 (expression -> CEIL LPAREN expression RPAREN .)
     $end            reduce using rule 18 (expression -> CEIL LPAREN expression RPAREN .)
     COMMA           reduce using rule 18 (expression -> CEIL LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 18 (expression -> CEIL LPAREN expression RPAREN .)
     RPAREN          reduce using rule 18 (expression -> CEIL LPAREN expression RPAREN .)
 
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for MULTIPLY in state 44 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 44 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 44 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 44 resolved as shift
+WARNING: shift/reduce conflict for POWER in state 44 resolved as shift
