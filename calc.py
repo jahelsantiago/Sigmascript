@@ -1,6 +1,31 @@
 import ply.lex as lex
 import ply.yacc as yacc
+import numpy as np
 import sys
+
+
+
+reserved = {
+    'if' : 'IF',
+    'then' : 'THEN',
+    'else' : 'ELSE',
+    'while' : 'WHILE',
+    'sin' : 'SIN',
+    'cos' : 'COS',
+    'tan' : 'TAN',
+    'sqrt' : 'SQRT',
+    'log' : 'LOG',
+    'exp' : 'EXP',
+    'pi' : 'PI',
+    'e' : 'E',
+    'arcsin' : 'ARCSIN',
+    'arccos' : 'ARCCOS',
+    'arctan' : 'ARCTAN',
+    'abs' : 'ABS',
+    'floor' : 'FLOOR',
+    'round' : 'ROUND',
+    'ceil' : 'CEIL',
+ }
 
 # Create a list to hold all of the token names
 tokens = [
@@ -12,9 +37,21 @@ tokens = [
     'MINUS',
     'DIVIDE',
     'MULTIPLY',
-    'EQUALS'
+    'EQUALS',
+    'LPAREN',
+    'RPAREN',
+    'LBRACE',
+    'RBRACE',
+    'LBRACKET',
+    'RBRACKET',
+    'POWER',
 
 ]
+
+
+tokens = tokens + list(reserved.values())
+
+
 
 # Use regular expressions to define what each token is
 t_PLUS = r'\+'
@@ -22,6 +59,14 @@ t_MINUS = r'\-'
 t_MULTIPLY = r'\*'
 t_DIVIDE = r'\/'
 t_EQUALS = r'\='
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
+t_LBRACE = r'\{'
+t_RBRACE = r'\}'
+t_LBRACKET = r'\['
+t_RBRACKET = r'\]'
+t_POWER = r'\^'
+
 
 # Ply's special t_ignore variable allows us to define characters the lexer will ignore.
 # We're ignoring spaces.
@@ -46,12 +91,15 @@ def t_INT(t):
 # Any character following the first character can be a-z A-Z 0-9 or an underscore.
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = 'NAME'
+    if t.value in reserved:
+        t.type = reserved[t.value]
+    else:
+        t.type = 'NAME'
     return t
 
 # Skip the current token and output 'Illegal characters' using the special Ply t_error function.
 def t_error(t):
-    print("Illegal characters!")
+    print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
 # Build the lexer
@@ -81,6 +129,25 @@ def p_var_assign(p):
     '''
     # Build our tree
     p[0] = ('=', p[1], p[3])
+
+def p_expression_function(p):
+    '''
+    expression : SIN LPAREN expression RPAREN
+                | COS LPAREN expression RPAREN
+                | TAN LPAREN expression RPAREN
+                | SQRT LPAREN expression RPAREN
+                | ARCSIN LPAREN expression RPAREN
+                | ARCCOS LPAREN expression RPAREN
+                | ARCTAN LPAREN expression RPAREN
+                | ABS LPAREN expression RPAREN
+                | FLOOR LPAREN expression RPAREN
+                | ROUND LPAREN expression RPAREN
+                | CEIL LPAREN expression RPAREN
+
+    '''
+    p[0] = (p[1], p[3])
+
+
 
 # Expressions are recursive.
 def p_expression(p):
@@ -133,6 +200,30 @@ def run(p):
             return run(p[1]) * run(p[2])
         elif p[0] == '/':
             return run(p[1]) / run(p[2])
+        elif p[0] == 'sin':
+            return np.sin(run(p[1]))
+        elif p[0] == 'cos':
+            return np.cos(run(p[1]))
+        elif p[0] == 'tan':
+            return np.tan(run(p[1]))
+        elif p[0] == 'sqrt':
+            return np.sqrt(run(p[1]))
+        elif p[0] == 'arcsin':
+            return np.arcsin(run(p[1]))
+        elif p[0] == 'arccos':
+            return np.arccos(run(p[1]))
+        elif p[0] == 'arctan':
+            return np.arctan(run(p[1]))
+        elif p[0] == 'abs':
+            return np.abs(run(p[1]))
+        elif p[0] == 'floor':
+            return np.floor(run(p[1]))
+        elif p[0] == 'round':
+            return np.round(run(p[1]))
+        elif p[0] == 'ceil':
+            return np.ceil(run(p[1]))
+        elif p[0] == '^':
+            return run(p[1]) ** run(p[2])
         elif p[0] == '=':
             env[p[1]] = run(p[2])
             return ''
@@ -146,9 +237,20 @@ def run(p):
         return p
 
 # Create a REPL to provide a way to interface with our calculator.
+tokenize = False
+
 while True:
     try:
         s = input('>> ')
     except EOFError:
         break
-    parser.parse(s)
+    if not tokenize: 
+        parser.parse(s)
+    else:
+        lexer.input(s)
+        while True:
+            tok = lexer.token()
+            if not tok:
+                break
+            print(tok)
+    
