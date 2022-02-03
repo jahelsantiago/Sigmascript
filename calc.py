@@ -1,3 +1,4 @@
+from operator import le
 import ply.lex as lex
 import ply.yacc as yacc
 import numpy as np
@@ -57,6 +58,7 @@ tokens = [
     'NE',
     'EQ',
     'NOT', 
+    'SEMICOLON',
 ]
 
 
@@ -86,11 +88,13 @@ t_RBRACE = r'\}'
 t_LBRACKET = r'\['
 t_RBRACKET = r'\]'
 t_COMMA = r'\,'
+t_SEMICOLON = r'\;'
 
 # Define a rule so we can track line numbers
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+
 
 # Ply's special t_ignore variable allows us to define characters the lexer will ignore.
 # We're ignoring spaces.
@@ -141,16 +145,29 @@ precedence = (
     ('left', 'POWER')
 )
 
-# Define our grammar. We allow expressions, var_assign's and empty's.
-def p_calc(p):
+def p_block(p):
     '''
-    calc : expression
-         | var_assign
-         | function
-         | empty
+    block : line block
+            | line
     '''
-    print(p[1])
-    run(p[1])
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        print("Ps-------")
+        print(p[1])
+        print(p[2])
+        p[0] = [p[1]] + p[2]
+        
+    print(p[0])
+
+def p_line(p):
+    '''
+    line : expression SEMICOLON
+         | var_assign SEMICOLON
+         | function SEMICOLON
+         | empty 
+    '''
+    p[0] = p[1]
 
 def p_function_print(p):
     '''
@@ -222,7 +239,6 @@ def p_expression(p):
     '''
     # Build our tree.
     p[0] = (p[2], p[1], p[3])
-    print(p[0])
 
 
 def p_expression_int_float(p):
@@ -327,7 +343,7 @@ def run(p):
 
 # Create a REPL to provide a way to interface with our calculator.
 tokenize = False
-acces_by_file = False
+acces_by_file = True
 
 
 while not acces_by_file:
@@ -347,9 +363,12 @@ while not acces_by_file:
 
 ##read a file and parse it
 if acces_by_file:
+    code = ""
     with open('test.txt') as f:
         for line in f:
-            parser.parse(line)
+            code += line
+    code = code.replace('\n', '')
+    parser.parse(code)
 
 
     
