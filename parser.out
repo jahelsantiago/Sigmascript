@@ -2,16 +2,21 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
+    AND
     E
     ELSE
     ENV
     EXP
+    FALSE
     IF
     LBRACE
     LOG
+    NOT
+    OR
     PI
     RBRACE
     THEN
+    TRUE
     WHILE
 
 Grammar
@@ -42,14 +47,21 @@ Rule 22    expression -> expression DIVIDE expression
 Rule 23    expression -> expression PLUS expression
 Rule 24    expression -> expression MINUS expression
 Rule 25    expression -> expression POWER expression
-Rule 26    expression -> INT
-Rule 27    expression -> FLOAT
-Rule 28    expression -> NAME
-Rule 29    empty -> <empty>
+Rule 26    expression -> expression GTE expression
+Rule 27    expression -> expression LTE expression
+Rule 28    expression -> expression GT expression
+Rule 29    expression -> expression LT expression
+Rule 30    expression -> expression EQ expression
+Rule 31    expression -> expression NE expression
+Rule 32    expression -> INT
+Rule 33    expression -> FLOAT
+Rule 34    expression -> NAME
+Rule 35    empty -> <empty>
 
 Terminals, with rules where they appear
 
 ABS                  : 17
+AND                  : 
 ARCCOS               : 15
 ARCSIN               : 14
 ARCTAN               : 16
@@ -60,19 +72,28 @@ DIVIDE               : 22
 E                    : 
 ELSE                 : 
 ENV                  : 
+EQ                   : 30
 EQUALS               : 9
 EXP                  : 
-FLOAT                : 27
+FALSE                : 
+FLOAT                : 33
 FLOOR                : 18
+GT                   : 28
+GTE                  : 26
 IF                   : 
-INT                  : 26
+INT                  : 32
 LBRACE               : 
 LBRACKET             : 6
 LOG                  : 
 LPAREN               : 5 10 11 12 13 14 15 16 17 18 19 20
+LT                   : 29
+LTE                  : 27
 MINUS                : 24
 MULTIPLY             : 21
-NAME                 : 9 28
+NAME                 : 9 34
+NE                   : 31
+NOT                  : 
+OR                   : 
 PI                   : 
 PLUS                 : 23
 POWER                : 25
@@ -85,6 +106,7 @@ SIN                  : 10
 SQRT                 : 13
 TAN                  : 12
 THEN                 : 
+TRUE                 : 
 WHILE                : 
 error                : 
 
@@ -93,7 +115,7 @@ Nonterminals, with rules where they appear
 array_elements       : 6 7
 calc                 : 0
 empty                : 4
-expression           : 1 5 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 21 22 22 23 23 24 24 25 25
+expression           : 1 5 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 21 22 22 23 23 24 24 25 25 26 26 27 27 28 28 29 29 30 30 31 31
 function             : 3
 var_assign           : 2
 
@@ -123,12 +145,18 @@ state 0
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
     (9) var_assign -> . NAME EQUALS expression
     (5) function -> . PRINT LPAREN expression RPAREN
-    (29) empty -> .
+    (35) empty -> .
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -146,7 +174,7 @@ state 0
     FLOAT           shift and go to state 19
     NAME            shift and go to state 20
     PRINT           shift and go to state 21
-    $end            reduce using rule 29 (empty -> .)
+    $end            reduce using rule 35 (empty -> .)
 
     calc                           shift and go to state 1
     expression                     shift and go to state 2
@@ -168,6 +196,12 @@ state 2
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
     $end            reduce using rule 1 (calc -> expression .)
     MULTIPLY        shift and go to state 22
@@ -175,6 +209,12 @@ state 2
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
 state 3
@@ -220,9 +260,15 @@ state 6
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -238,137 +284,155 @@ state 6
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    array_elements                 shift and go to state 27
-    expression                     shift and go to state 28
+    array_elements                 shift and go to state 33
+    expression                     shift and go to state 34
 
 state 7
 
     (10) expression -> SIN . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 30
+    LPAREN          shift and go to state 36
 
 
 state 8
 
     (11) expression -> COS . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 31
+    LPAREN          shift and go to state 37
 
 
 state 9
 
     (12) expression -> TAN . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 32
+    LPAREN          shift and go to state 38
 
 
 state 10
 
     (13) expression -> SQRT . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 33
+    LPAREN          shift and go to state 39
 
 
 state 11
 
     (14) expression -> ARCSIN . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 34
+    LPAREN          shift and go to state 40
 
 
 state 12
 
     (15) expression -> ARCCOS . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 35
+    LPAREN          shift and go to state 41
 
 
 state 13
 
     (16) expression -> ARCTAN . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 36
+    LPAREN          shift and go to state 42
 
 
 state 14
 
     (17) expression -> ABS . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 37
+    LPAREN          shift and go to state 43
 
 
 state 15
 
     (18) expression -> FLOOR . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 38
+    LPAREN          shift and go to state 44
 
 
 state 16
 
     (19) expression -> ROUND . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 39
+    LPAREN          shift and go to state 45
 
 
 state 17
 
     (20) expression -> CEIL . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 40
+    LPAREN          shift and go to state 46
 
 
 state 18
 
-    (26) expression -> INT .
+    (32) expression -> INT .
 
-    MULTIPLY        reduce using rule 26 (expression -> INT .)
-    DIVIDE          reduce using rule 26 (expression -> INT .)
-    PLUS            reduce using rule 26 (expression -> INT .)
-    MINUS           reduce using rule 26 (expression -> INT .)
-    POWER           reduce using rule 26 (expression -> INT .)
-    $end            reduce using rule 26 (expression -> INT .)
-    COMMA           reduce using rule 26 (expression -> INT .)
-    RBRACKET        reduce using rule 26 (expression -> INT .)
-    RPAREN          reduce using rule 26 (expression -> INT .)
+    MULTIPLY        reduce using rule 32 (expression -> INT .)
+    DIVIDE          reduce using rule 32 (expression -> INT .)
+    PLUS            reduce using rule 32 (expression -> INT .)
+    MINUS           reduce using rule 32 (expression -> INT .)
+    POWER           reduce using rule 32 (expression -> INT .)
+    GTE             reduce using rule 32 (expression -> INT .)
+    LTE             reduce using rule 32 (expression -> INT .)
+    GT              reduce using rule 32 (expression -> INT .)
+    LT              reduce using rule 32 (expression -> INT .)
+    EQ              reduce using rule 32 (expression -> INT .)
+    NE              reduce using rule 32 (expression -> INT .)
+    $end            reduce using rule 32 (expression -> INT .)
+    COMMA           reduce using rule 32 (expression -> INT .)
+    RBRACKET        reduce using rule 32 (expression -> INT .)
+    RPAREN          reduce using rule 32 (expression -> INT .)
 
 
 state 19
 
-    (27) expression -> FLOAT .
+    (33) expression -> FLOAT .
 
-    MULTIPLY        reduce using rule 27 (expression -> FLOAT .)
-    DIVIDE          reduce using rule 27 (expression -> FLOAT .)
-    PLUS            reduce using rule 27 (expression -> FLOAT .)
-    MINUS           reduce using rule 27 (expression -> FLOAT .)
-    POWER           reduce using rule 27 (expression -> FLOAT .)
-    $end            reduce using rule 27 (expression -> FLOAT .)
-    COMMA           reduce using rule 27 (expression -> FLOAT .)
-    RBRACKET        reduce using rule 27 (expression -> FLOAT .)
-    RPAREN          reduce using rule 27 (expression -> FLOAT .)
+    MULTIPLY        reduce using rule 33 (expression -> FLOAT .)
+    DIVIDE          reduce using rule 33 (expression -> FLOAT .)
+    PLUS            reduce using rule 33 (expression -> FLOAT .)
+    MINUS           reduce using rule 33 (expression -> FLOAT .)
+    POWER           reduce using rule 33 (expression -> FLOAT .)
+    GTE             reduce using rule 33 (expression -> FLOAT .)
+    LTE             reduce using rule 33 (expression -> FLOAT .)
+    GT              reduce using rule 33 (expression -> FLOAT .)
+    LT              reduce using rule 33 (expression -> FLOAT .)
+    EQ              reduce using rule 33 (expression -> FLOAT .)
+    NE              reduce using rule 33 (expression -> FLOAT .)
+    $end            reduce using rule 33 (expression -> FLOAT .)
+    COMMA           reduce using rule 33 (expression -> FLOAT .)
+    RBRACKET        reduce using rule 33 (expression -> FLOAT .)
+    RPAREN          reduce using rule 33 (expression -> FLOAT .)
 
 
 state 20
 
-    (28) expression -> NAME .
+    (34) expression -> NAME .
     (9) var_assign -> NAME . EQUALS expression
 
-    MULTIPLY        reduce using rule 28 (expression -> NAME .)
-    DIVIDE          reduce using rule 28 (expression -> NAME .)
-    PLUS            reduce using rule 28 (expression -> NAME .)
-    MINUS           reduce using rule 28 (expression -> NAME .)
-    POWER           reduce using rule 28 (expression -> NAME .)
-    $end            reduce using rule 28 (expression -> NAME .)
-    EQUALS          shift and go to state 41
+    MULTIPLY        reduce using rule 34 (expression -> NAME .)
+    DIVIDE          reduce using rule 34 (expression -> NAME .)
+    PLUS            reduce using rule 34 (expression -> NAME .)
+    MINUS           reduce using rule 34 (expression -> NAME .)
+    POWER           reduce using rule 34 (expression -> NAME .)
+    GTE             reduce using rule 34 (expression -> NAME .)
+    LTE             reduce using rule 34 (expression -> NAME .)
+    GT              reduce using rule 34 (expression -> NAME .)
+    LT              reduce using rule 34 (expression -> NAME .)
+    EQ              reduce using rule 34 (expression -> NAME .)
+    NE              reduce using rule 34 (expression -> NAME .)
+    $end            reduce using rule 34 (expression -> NAME .)
+    EQUALS          shift and go to state 47
 
 
 state 21
 
     (5) function -> PRINT . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 42
+    LPAREN          shift and go to state 48
 
 
 state 22
@@ -391,9 +455,15 @@ state 22
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -409,9 +479,9 @@ state 22
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 43
+    expression                     shift and go to state 49
 
 state 23
 
@@ -433,9 +503,15 @@ state 23
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -451,9 +527,9 @@ state 23
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 44
+    expression                     shift and go to state 50
 
 state 24
 
@@ -475,9 +551,15 @@ state 24
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -493,9 +575,9 @@ state 24
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 45
+    expression                     shift and go to state 51
 
 state 25
 
@@ -517,9 +599,15 @@ state 25
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -535,9 +623,9 @@ state 25
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 46
+    expression                     shift and go to state 52
 
 state 26
 
@@ -559,9 +647,15 @@ state 26
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -577,18 +671,306 @@ state 26
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 47
+    expression                     shift and go to state 53
 
 state 27
 
-    (6) expression -> LBRACKET array_elements . RBRACKET
+    (26) expression -> expression GTE . expression
+    (6) expression -> . LBRACKET array_elements RBRACKET
+    (10) expression -> . SIN LPAREN expression RPAREN
+    (11) expression -> . COS LPAREN expression RPAREN
+    (12) expression -> . TAN LPAREN expression RPAREN
+    (13) expression -> . SQRT LPAREN expression RPAREN
+    (14) expression -> . ARCSIN LPAREN expression RPAREN
+    (15) expression -> . ARCCOS LPAREN expression RPAREN
+    (16) expression -> . ARCTAN LPAREN expression RPAREN
+    (17) expression -> . ABS LPAREN expression RPAREN
+    (18) expression -> . FLOOR LPAREN expression RPAREN
+    (19) expression -> . ROUND LPAREN expression RPAREN
+    (20) expression -> . CEIL LPAREN expression RPAREN
+    (21) expression -> . expression MULTIPLY expression
+    (22) expression -> . expression DIVIDE expression
+    (23) expression -> . expression PLUS expression
+    (24) expression -> . expression MINUS expression
+    (25) expression -> . expression POWER expression
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
-    RBRACKET        shift and go to state 48
+    LBRACKET        shift and go to state 6
+    SIN             shift and go to state 7
+    COS             shift and go to state 8
+    TAN             shift and go to state 9
+    SQRT            shift and go to state 10
+    ARCSIN          shift and go to state 11
+    ARCCOS          shift and go to state 12
+    ARCTAN          shift and go to state 13
+    ABS             shift and go to state 14
+    FLOOR           shift and go to state 15
+    ROUND           shift and go to state 16
+    CEIL            shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    NAME            shift and go to state 35
 
+    expression                     shift and go to state 54
 
 state 28
+
+    (27) expression -> expression LTE . expression
+    (6) expression -> . LBRACKET array_elements RBRACKET
+    (10) expression -> . SIN LPAREN expression RPAREN
+    (11) expression -> . COS LPAREN expression RPAREN
+    (12) expression -> . TAN LPAREN expression RPAREN
+    (13) expression -> . SQRT LPAREN expression RPAREN
+    (14) expression -> . ARCSIN LPAREN expression RPAREN
+    (15) expression -> . ARCCOS LPAREN expression RPAREN
+    (16) expression -> . ARCTAN LPAREN expression RPAREN
+    (17) expression -> . ABS LPAREN expression RPAREN
+    (18) expression -> . FLOOR LPAREN expression RPAREN
+    (19) expression -> . ROUND LPAREN expression RPAREN
+    (20) expression -> . CEIL LPAREN expression RPAREN
+    (21) expression -> . expression MULTIPLY expression
+    (22) expression -> . expression DIVIDE expression
+    (23) expression -> . expression PLUS expression
+    (24) expression -> . expression MINUS expression
+    (25) expression -> . expression POWER expression
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
+
+    LBRACKET        shift and go to state 6
+    SIN             shift and go to state 7
+    COS             shift and go to state 8
+    TAN             shift and go to state 9
+    SQRT            shift and go to state 10
+    ARCSIN          shift and go to state 11
+    ARCCOS          shift and go to state 12
+    ARCTAN          shift and go to state 13
+    ABS             shift and go to state 14
+    FLOOR           shift and go to state 15
+    ROUND           shift and go to state 16
+    CEIL            shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    NAME            shift and go to state 35
+
+    expression                     shift and go to state 55
+
+state 29
+
+    (28) expression -> expression GT . expression
+    (6) expression -> . LBRACKET array_elements RBRACKET
+    (10) expression -> . SIN LPAREN expression RPAREN
+    (11) expression -> . COS LPAREN expression RPAREN
+    (12) expression -> . TAN LPAREN expression RPAREN
+    (13) expression -> . SQRT LPAREN expression RPAREN
+    (14) expression -> . ARCSIN LPAREN expression RPAREN
+    (15) expression -> . ARCCOS LPAREN expression RPAREN
+    (16) expression -> . ARCTAN LPAREN expression RPAREN
+    (17) expression -> . ABS LPAREN expression RPAREN
+    (18) expression -> . FLOOR LPAREN expression RPAREN
+    (19) expression -> . ROUND LPAREN expression RPAREN
+    (20) expression -> . CEIL LPAREN expression RPAREN
+    (21) expression -> . expression MULTIPLY expression
+    (22) expression -> . expression DIVIDE expression
+    (23) expression -> . expression PLUS expression
+    (24) expression -> . expression MINUS expression
+    (25) expression -> . expression POWER expression
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
+
+    LBRACKET        shift and go to state 6
+    SIN             shift and go to state 7
+    COS             shift and go to state 8
+    TAN             shift and go to state 9
+    SQRT            shift and go to state 10
+    ARCSIN          shift and go to state 11
+    ARCCOS          shift and go to state 12
+    ARCTAN          shift and go to state 13
+    ABS             shift and go to state 14
+    FLOOR           shift and go to state 15
+    ROUND           shift and go to state 16
+    CEIL            shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    NAME            shift and go to state 35
+
+    expression                     shift and go to state 56
+
+state 30
+
+    (29) expression -> expression LT . expression
+    (6) expression -> . LBRACKET array_elements RBRACKET
+    (10) expression -> . SIN LPAREN expression RPAREN
+    (11) expression -> . COS LPAREN expression RPAREN
+    (12) expression -> . TAN LPAREN expression RPAREN
+    (13) expression -> . SQRT LPAREN expression RPAREN
+    (14) expression -> . ARCSIN LPAREN expression RPAREN
+    (15) expression -> . ARCCOS LPAREN expression RPAREN
+    (16) expression -> . ARCTAN LPAREN expression RPAREN
+    (17) expression -> . ABS LPAREN expression RPAREN
+    (18) expression -> . FLOOR LPAREN expression RPAREN
+    (19) expression -> . ROUND LPAREN expression RPAREN
+    (20) expression -> . CEIL LPAREN expression RPAREN
+    (21) expression -> . expression MULTIPLY expression
+    (22) expression -> . expression DIVIDE expression
+    (23) expression -> . expression PLUS expression
+    (24) expression -> . expression MINUS expression
+    (25) expression -> . expression POWER expression
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
+
+    LBRACKET        shift and go to state 6
+    SIN             shift and go to state 7
+    COS             shift and go to state 8
+    TAN             shift and go to state 9
+    SQRT            shift and go to state 10
+    ARCSIN          shift and go to state 11
+    ARCCOS          shift and go to state 12
+    ARCTAN          shift and go to state 13
+    ABS             shift and go to state 14
+    FLOOR           shift and go to state 15
+    ROUND           shift and go to state 16
+    CEIL            shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    NAME            shift and go to state 35
+
+    expression                     shift and go to state 57
+
+state 31
+
+    (30) expression -> expression EQ . expression
+    (6) expression -> . LBRACKET array_elements RBRACKET
+    (10) expression -> . SIN LPAREN expression RPAREN
+    (11) expression -> . COS LPAREN expression RPAREN
+    (12) expression -> . TAN LPAREN expression RPAREN
+    (13) expression -> . SQRT LPAREN expression RPAREN
+    (14) expression -> . ARCSIN LPAREN expression RPAREN
+    (15) expression -> . ARCCOS LPAREN expression RPAREN
+    (16) expression -> . ARCTAN LPAREN expression RPAREN
+    (17) expression -> . ABS LPAREN expression RPAREN
+    (18) expression -> . FLOOR LPAREN expression RPAREN
+    (19) expression -> . ROUND LPAREN expression RPAREN
+    (20) expression -> . CEIL LPAREN expression RPAREN
+    (21) expression -> . expression MULTIPLY expression
+    (22) expression -> . expression DIVIDE expression
+    (23) expression -> . expression PLUS expression
+    (24) expression -> . expression MINUS expression
+    (25) expression -> . expression POWER expression
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
+
+    LBRACKET        shift and go to state 6
+    SIN             shift and go to state 7
+    COS             shift and go to state 8
+    TAN             shift and go to state 9
+    SQRT            shift and go to state 10
+    ARCSIN          shift and go to state 11
+    ARCCOS          shift and go to state 12
+    ARCTAN          shift and go to state 13
+    ABS             shift and go to state 14
+    FLOOR           shift and go to state 15
+    ROUND           shift and go to state 16
+    CEIL            shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    NAME            shift and go to state 35
+
+    expression                     shift and go to state 58
+
+state 32
+
+    (31) expression -> expression NE . expression
+    (6) expression -> . LBRACKET array_elements RBRACKET
+    (10) expression -> . SIN LPAREN expression RPAREN
+    (11) expression -> . COS LPAREN expression RPAREN
+    (12) expression -> . TAN LPAREN expression RPAREN
+    (13) expression -> . SQRT LPAREN expression RPAREN
+    (14) expression -> . ARCSIN LPAREN expression RPAREN
+    (15) expression -> . ARCCOS LPAREN expression RPAREN
+    (16) expression -> . ARCTAN LPAREN expression RPAREN
+    (17) expression -> . ABS LPAREN expression RPAREN
+    (18) expression -> . FLOOR LPAREN expression RPAREN
+    (19) expression -> . ROUND LPAREN expression RPAREN
+    (20) expression -> . CEIL LPAREN expression RPAREN
+    (21) expression -> . expression MULTIPLY expression
+    (22) expression -> . expression DIVIDE expression
+    (23) expression -> . expression PLUS expression
+    (24) expression -> . expression MINUS expression
+    (25) expression -> . expression POWER expression
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
+
+    LBRACKET        shift and go to state 6
+    SIN             shift and go to state 7
+    COS             shift and go to state 8
+    TAN             shift and go to state 9
+    SQRT            shift and go to state 10
+    ARCSIN          shift and go to state 11
+    ARCCOS          shift and go to state 12
+    ARCTAN          shift and go to state 13
+    ABS             shift and go to state 14
+    FLOOR           shift and go to state 15
+    ROUND           shift and go to state 16
+    CEIL            shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    NAME            shift and go to state 35
+
+    expression                     shift and go to state 59
+
+state 33
+
+    (6) expression -> LBRACKET array_elements . RBRACKET
+
+    RBRACKET        shift and go to state 60
+
+
+state 34
 
     (7) array_elements -> expression . COMMA array_elements
     (8) array_elements -> expression .
@@ -597,32 +979,50 @@ state 28
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    COMMA           shift and go to state 49
+    COMMA           shift and go to state 61
     RBRACKET        reduce using rule 8 (array_elements -> expression .)
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 29
+state 35
 
-    (28) expression -> NAME .
+    (34) expression -> NAME .
 
-    COMMA           reduce using rule 28 (expression -> NAME .)
-    MULTIPLY        reduce using rule 28 (expression -> NAME .)
-    DIVIDE          reduce using rule 28 (expression -> NAME .)
-    PLUS            reduce using rule 28 (expression -> NAME .)
-    MINUS           reduce using rule 28 (expression -> NAME .)
-    POWER           reduce using rule 28 (expression -> NAME .)
-    RBRACKET        reduce using rule 28 (expression -> NAME .)
-    $end            reduce using rule 28 (expression -> NAME .)
-    RPAREN          reduce using rule 28 (expression -> NAME .)
+    COMMA           reduce using rule 34 (expression -> NAME .)
+    MULTIPLY        reduce using rule 34 (expression -> NAME .)
+    DIVIDE          reduce using rule 34 (expression -> NAME .)
+    PLUS            reduce using rule 34 (expression -> NAME .)
+    MINUS           reduce using rule 34 (expression -> NAME .)
+    POWER           reduce using rule 34 (expression -> NAME .)
+    GTE             reduce using rule 34 (expression -> NAME .)
+    LTE             reduce using rule 34 (expression -> NAME .)
+    GT              reduce using rule 34 (expression -> NAME .)
+    LT              reduce using rule 34 (expression -> NAME .)
+    EQ              reduce using rule 34 (expression -> NAME .)
+    NE              reduce using rule 34 (expression -> NAME .)
+    RBRACKET        reduce using rule 34 (expression -> NAME .)
+    $end            reduce using rule 34 (expression -> NAME .)
+    RPAREN          reduce using rule 34 (expression -> NAME .)
 
 
-state 30
+state 36
 
     (10) expression -> SIN LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -642,9 +1042,15 @@ state 30
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -660,11 +1066,11 @@ state 30
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 50
+    expression                     shift and go to state 62
 
-state 31
+state 37
 
     (11) expression -> COS LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -684,9 +1090,15 @@ state 31
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -702,11 +1114,11 @@ state 31
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 51
+    expression                     shift and go to state 63
 
-state 32
+state 38
 
     (12) expression -> TAN LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -726,9 +1138,15 @@ state 32
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -744,11 +1162,11 @@ state 32
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 52
+    expression                     shift and go to state 64
 
-state 33
+state 39
 
     (13) expression -> SQRT LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -768,9 +1186,15 @@ state 33
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -786,11 +1210,11 @@ state 33
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 53
+    expression                     shift and go to state 65
 
-state 34
+state 40
 
     (14) expression -> ARCSIN LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -810,9 +1234,15 @@ state 34
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -828,11 +1258,11 @@ state 34
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 54
+    expression                     shift and go to state 66
 
-state 35
+state 41
 
     (15) expression -> ARCCOS LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -852,9 +1282,15 @@ state 35
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -870,11 +1306,11 @@ state 35
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 55
+    expression                     shift and go to state 67
 
-state 36
+state 42
 
     (16) expression -> ARCTAN LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -894,9 +1330,15 @@ state 36
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -912,11 +1354,11 @@ state 36
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 56
+    expression                     shift and go to state 68
 
-state 37
+state 43
 
     (17) expression -> ABS LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -936,9 +1378,15 @@ state 37
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -954,11 +1402,11 @@ state 37
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 57
+    expression                     shift and go to state 69
 
-state 38
+state 44
 
     (18) expression -> FLOOR LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -978,9 +1426,15 @@ state 38
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -996,11 +1450,11 @@ state 38
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 58
+    expression                     shift and go to state 70
 
-state 39
+state 45
 
     (19) expression -> ROUND LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -1020,9 +1474,15 @@ state 39
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -1038,11 +1498,11 @@ state 39
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 59
+    expression                     shift and go to state 71
 
-state 40
+state 46
 
     (20) expression -> CEIL LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -1062,9 +1522,15 @@ state 40
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -1080,11 +1546,11 @@ state 40
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 60
+    expression                     shift and go to state 72
 
-state 41
+state 47
 
     (9) var_assign -> NAME EQUALS . expression
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -1104,9 +1570,15 @@ state 41
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -1122,11 +1594,11 @@ state 41
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 61
+    expression                     shift and go to state 73
 
-state 42
+state 48
 
     (5) function -> PRINT LPAREN . expression RPAREN
     (6) expression -> . LBRACKET array_elements RBRACKET
@@ -1146,9 +1618,15 @@ state 42
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -1164,11 +1642,11 @@ state 42
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 62
+    expression                     shift and go to state 74
 
-state 43
+state 49
 
     (21) expression -> expression MULTIPLY expression .
     (21) expression -> expression . MULTIPLY expression
@@ -1176,11 +1654,23 @@ state 43
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
     MULTIPLY        reduce using rule 21 (expression -> expression MULTIPLY expression .)
     DIVIDE          reduce using rule 21 (expression -> expression MULTIPLY expression .)
     PLUS            reduce using rule 21 (expression -> expression MULTIPLY expression .)
     MINUS           reduce using rule 21 (expression -> expression MULTIPLY expression .)
+    GTE             reduce using rule 21 (expression -> expression MULTIPLY expression .)
+    LTE             reduce using rule 21 (expression -> expression MULTIPLY expression .)
+    GT              reduce using rule 21 (expression -> expression MULTIPLY expression .)
+    LT              reduce using rule 21 (expression -> expression MULTIPLY expression .)
+    EQ              reduce using rule 21 (expression -> expression MULTIPLY expression .)
+    NE              reduce using rule 21 (expression -> expression MULTIPLY expression .)
     $end            reduce using rule 21 (expression -> expression MULTIPLY expression .)
     COMMA           reduce using rule 21 (expression -> expression MULTIPLY expression .)
     RBRACKET        reduce using rule 21 (expression -> expression MULTIPLY expression .)
@@ -1192,9 +1682,15 @@ state 43
   ! DIVIDE          [ shift and go to state 23 ]
   ! PLUS            [ shift and go to state 24 ]
   ! MINUS           [ shift and go to state 25 ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
 
 
-state 44
+state 50
 
     (22) expression -> expression DIVIDE expression .
     (21) expression -> expression . MULTIPLY expression
@@ -1202,11 +1698,23 @@ state 44
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
     MULTIPLY        reduce using rule 22 (expression -> expression DIVIDE expression .)
     DIVIDE          reduce using rule 22 (expression -> expression DIVIDE expression .)
     PLUS            reduce using rule 22 (expression -> expression DIVIDE expression .)
     MINUS           reduce using rule 22 (expression -> expression DIVIDE expression .)
+    GTE             reduce using rule 22 (expression -> expression DIVIDE expression .)
+    LTE             reduce using rule 22 (expression -> expression DIVIDE expression .)
+    GT              reduce using rule 22 (expression -> expression DIVIDE expression .)
+    LT              reduce using rule 22 (expression -> expression DIVIDE expression .)
+    EQ              reduce using rule 22 (expression -> expression DIVIDE expression .)
+    NE              reduce using rule 22 (expression -> expression DIVIDE expression .)
     $end            reduce using rule 22 (expression -> expression DIVIDE expression .)
     COMMA           reduce using rule 22 (expression -> expression DIVIDE expression .)
     RBRACKET        reduce using rule 22 (expression -> expression DIVIDE expression .)
@@ -1218,9 +1726,15 @@ state 44
   ! DIVIDE          [ shift and go to state 23 ]
   ! PLUS            [ shift and go to state 24 ]
   ! MINUS           [ shift and go to state 25 ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
 
 
-state 45
+state 51
 
     (23) expression -> expression PLUS expression .
     (21) expression -> expression . MULTIPLY expression
@@ -1228,9 +1742,21 @@ state 45
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
     PLUS            reduce using rule 23 (expression -> expression PLUS expression .)
     MINUS           reduce using rule 23 (expression -> expression PLUS expression .)
+    GTE             reduce using rule 23 (expression -> expression PLUS expression .)
+    LTE             reduce using rule 23 (expression -> expression PLUS expression .)
+    GT              reduce using rule 23 (expression -> expression PLUS expression .)
+    LT              reduce using rule 23 (expression -> expression PLUS expression .)
+    EQ              reduce using rule 23 (expression -> expression PLUS expression .)
+    NE              reduce using rule 23 (expression -> expression PLUS expression .)
     $end            reduce using rule 23 (expression -> expression PLUS expression .)
     COMMA           reduce using rule 23 (expression -> expression PLUS expression .)
     RBRACKET        reduce using rule 23 (expression -> expression PLUS expression .)
@@ -1244,9 +1770,15 @@ state 45
   ! POWER           [ reduce using rule 23 (expression -> expression PLUS expression .) ]
   ! PLUS            [ shift and go to state 24 ]
   ! MINUS           [ shift and go to state 25 ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
 
 
-state 46
+state 52
 
     (24) expression -> expression MINUS expression .
     (21) expression -> expression . MULTIPLY expression
@@ -1254,9 +1786,21 @@ state 46
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
     PLUS            reduce using rule 24 (expression -> expression MINUS expression .)
     MINUS           reduce using rule 24 (expression -> expression MINUS expression .)
+    GTE             reduce using rule 24 (expression -> expression MINUS expression .)
+    LTE             reduce using rule 24 (expression -> expression MINUS expression .)
+    GT              reduce using rule 24 (expression -> expression MINUS expression .)
+    LT              reduce using rule 24 (expression -> expression MINUS expression .)
+    EQ              reduce using rule 24 (expression -> expression MINUS expression .)
+    NE              reduce using rule 24 (expression -> expression MINUS expression .)
     $end            reduce using rule 24 (expression -> expression MINUS expression .)
     COMMA           reduce using rule 24 (expression -> expression MINUS expression .)
     RBRACKET        reduce using rule 24 (expression -> expression MINUS expression .)
@@ -1270,9 +1814,15 @@ state 46
   ! POWER           [ reduce using rule 24 (expression -> expression MINUS expression .) ]
   ! PLUS            [ shift and go to state 24 ]
   ! MINUS           [ shift and go to state 25 ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
 
 
-state 47
+state 53
 
     (25) expression -> expression POWER expression .
     (21) expression -> expression . MULTIPLY expression
@@ -1280,12 +1830,24 @@ state 47
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
     MULTIPLY        reduce using rule 25 (expression -> expression POWER expression .)
     DIVIDE          reduce using rule 25 (expression -> expression POWER expression .)
     PLUS            reduce using rule 25 (expression -> expression POWER expression .)
     MINUS           reduce using rule 25 (expression -> expression POWER expression .)
     POWER           reduce using rule 25 (expression -> expression POWER expression .)
+    GTE             reduce using rule 25 (expression -> expression POWER expression .)
+    LTE             reduce using rule 25 (expression -> expression POWER expression .)
+    GT              reduce using rule 25 (expression -> expression POWER expression .)
+    LT              reduce using rule 25 (expression -> expression POWER expression .)
+    EQ              reduce using rule 25 (expression -> expression POWER expression .)
+    NE              reduce using rule 25 (expression -> expression POWER expression .)
     $end            reduce using rule 25 (expression -> expression POWER expression .)
     COMMA           reduce using rule 25 (expression -> expression POWER expression .)
     RBRACKET        reduce using rule 25 (expression -> expression POWER expression .)
@@ -1296,9 +1858,279 @@ state 47
   ! PLUS            [ shift and go to state 24 ]
   ! MINUS           [ shift and go to state 25 ]
   ! POWER           [ shift and go to state 26 ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
 
 
-state 48
+state 54
+
+    (26) expression -> expression GTE expression .
+    (21) expression -> expression . MULTIPLY expression
+    (22) expression -> expression . DIVIDE expression
+    (23) expression -> expression . PLUS expression
+    (24) expression -> expression . MINUS expression
+    (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
+
+    GTE             reduce using rule 26 (expression -> expression GTE expression .)
+    LTE             reduce using rule 26 (expression -> expression GTE expression .)
+    GT              reduce using rule 26 (expression -> expression GTE expression .)
+    LT              reduce using rule 26 (expression -> expression GTE expression .)
+    EQ              reduce using rule 26 (expression -> expression GTE expression .)
+    NE              reduce using rule 26 (expression -> expression GTE expression .)
+    $end            reduce using rule 26 (expression -> expression GTE expression .)
+    COMMA           reduce using rule 26 (expression -> expression GTE expression .)
+    RBRACKET        reduce using rule 26 (expression -> expression GTE expression .)
+    RPAREN          reduce using rule 26 (expression -> expression GTE expression .)
+    MULTIPLY        shift and go to state 22
+    DIVIDE          shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+    POWER           shift and go to state 26
+
+  ! MULTIPLY        [ reduce using rule 26 (expression -> expression GTE expression .) ]
+  ! DIVIDE          [ reduce using rule 26 (expression -> expression GTE expression .) ]
+  ! PLUS            [ reduce using rule 26 (expression -> expression GTE expression .) ]
+  ! MINUS           [ reduce using rule 26 (expression -> expression GTE expression .) ]
+  ! POWER           [ reduce using rule 26 (expression -> expression GTE expression .) ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
+
+
+state 55
+
+    (27) expression -> expression LTE expression .
+    (21) expression -> expression . MULTIPLY expression
+    (22) expression -> expression . DIVIDE expression
+    (23) expression -> expression . PLUS expression
+    (24) expression -> expression . MINUS expression
+    (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
+
+    GTE             reduce using rule 27 (expression -> expression LTE expression .)
+    LTE             reduce using rule 27 (expression -> expression LTE expression .)
+    GT              reduce using rule 27 (expression -> expression LTE expression .)
+    LT              reduce using rule 27 (expression -> expression LTE expression .)
+    EQ              reduce using rule 27 (expression -> expression LTE expression .)
+    NE              reduce using rule 27 (expression -> expression LTE expression .)
+    $end            reduce using rule 27 (expression -> expression LTE expression .)
+    COMMA           reduce using rule 27 (expression -> expression LTE expression .)
+    RBRACKET        reduce using rule 27 (expression -> expression LTE expression .)
+    RPAREN          reduce using rule 27 (expression -> expression LTE expression .)
+    MULTIPLY        shift and go to state 22
+    DIVIDE          shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+    POWER           shift and go to state 26
+
+  ! MULTIPLY        [ reduce using rule 27 (expression -> expression LTE expression .) ]
+  ! DIVIDE          [ reduce using rule 27 (expression -> expression LTE expression .) ]
+  ! PLUS            [ reduce using rule 27 (expression -> expression LTE expression .) ]
+  ! MINUS           [ reduce using rule 27 (expression -> expression LTE expression .) ]
+  ! POWER           [ reduce using rule 27 (expression -> expression LTE expression .) ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
+
+
+state 56
+
+    (28) expression -> expression GT expression .
+    (21) expression -> expression . MULTIPLY expression
+    (22) expression -> expression . DIVIDE expression
+    (23) expression -> expression . PLUS expression
+    (24) expression -> expression . MINUS expression
+    (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
+
+    GTE             reduce using rule 28 (expression -> expression GT expression .)
+    LTE             reduce using rule 28 (expression -> expression GT expression .)
+    GT              reduce using rule 28 (expression -> expression GT expression .)
+    LT              reduce using rule 28 (expression -> expression GT expression .)
+    EQ              reduce using rule 28 (expression -> expression GT expression .)
+    NE              reduce using rule 28 (expression -> expression GT expression .)
+    $end            reduce using rule 28 (expression -> expression GT expression .)
+    COMMA           reduce using rule 28 (expression -> expression GT expression .)
+    RBRACKET        reduce using rule 28 (expression -> expression GT expression .)
+    RPAREN          reduce using rule 28 (expression -> expression GT expression .)
+    MULTIPLY        shift and go to state 22
+    DIVIDE          shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+    POWER           shift and go to state 26
+
+  ! MULTIPLY        [ reduce using rule 28 (expression -> expression GT expression .) ]
+  ! DIVIDE          [ reduce using rule 28 (expression -> expression GT expression .) ]
+  ! PLUS            [ reduce using rule 28 (expression -> expression GT expression .) ]
+  ! MINUS           [ reduce using rule 28 (expression -> expression GT expression .) ]
+  ! POWER           [ reduce using rule 28 (expression -> expression GT expression .) ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
+
+
+state 57
+
+    (29) expression -> expression LT expression .
+    (21) expression -> expression . MULTIPLY expression
+    (22) expression -> expression . DIVIDE expression
+    (23) expression -> expression . PLUS expression
+    (24) expression -> expression . MINUS expression
+    (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
+
+    GTE             reduce using rule 29 (expression -> expression LT expression .)
+    LTE             reduce using rule 29 (expression -> expression LT expression .)
+    GT              reduce using rule 29 (expression -> expression LT expression .)
+    LT              reduce using rule 29 (expression -> expression LT expression .)
+    EQ              reduce using rule 29 (expression -> expression LT expression .)
+    NE              reduce using rule 29 (expression -> expression LT expression .)
+    $end            reduce using rule 29 (expression -> expression LT expression .)
+    COMMA           reduce using rule 29 (expression -> expression LT expression .)
+    RBRACKET        reduce using rule 29 (expression -> expression LT expression .)
+    RPAREN          reduce using rule 29 (expression -> expression LT expression .)
+    MULTIPLY        shift and go to state 22
+    DIVIDE          shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+    POWER           shift and go to state 26
+
+  ! MULTIPLY        [ reduce using rule 29 (expression -> expression LT expression .) ]
+  ! DIVIDE          [ reduce using rule 29 (expression -> expression LT expression .) ]
+  ! PLUS            [ reduce using rule 29 (expression -> expression LT expression .) ]
+  ! MINUS           [ reduce using rule 29 (expression -> expression LT expression .) ]
+  ! POWER           [ reduce using rule 29 (expression -> expression LT expression .) ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
+
+
+state 58
+
+    (30) expression -> expression EQ expression .
+    (21) expression -> expression . MULTIPLY expression
+    (22) expression -> expression . DIVIDE expression
+    (23) expression -> expression . PLUS expression
+    (24) expression -> expression . MINUS expression
+    (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
+
+    GTE             reduce using rule 30 (expression -> expression EQ expression .)
+    LTE             reduce using rule 30 (expression -> expression EQ expression .)
+    GT              reduce using rule 30 (expression -> expression EQ expression .)
+    LT              reduce using rule 30 (expression -> expression EQ expression .)
+    EQ              reduce using rule 30 (expression -> expression EQ expression .)
+    NE              reduce using rule 30 (expression -> expression EQ expression .)
+    $end            reduce using rule 30 (expression -> expression EQ expression .)
+    COMMA           reduce using rule 30 (expression -> expression EQ expression .)
+    RBRACKET        reduce using rule 30 (expression -> expression EQ expression .)
+    RPAREN          reduce using rule 30 (expression -> expression EQ expression .)
+    MULTIPLY        shift and go to state 22
+    DIVIDE          shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+    POWER           shift and go to state 26
+
+  ! MULTIPLY        [ reduce using rule 30 (expression -> expression EQ expression .) ]
+  ! DIVIDE          [ reduce using rule 30 (expression -> expression EQ expression .) ]
+  ! PLUS            [ reduce using rule 30 (expression -> expression EQ expression .) ]
+  ! MINUS           [ reduce using rule 30 (expression -> expression EQ expression .) ]
+  ! POWER           [ reduce using rule 30 (expression -> expression EQ expression .) ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
+
+
+state 59
+
+    (31) expression -> expression NE expression .
+    (21) expression -> expression . MULTIPLY expression
+    (22) expression -> expression . DIVIDE expression
+    (23) expression -> expression . PLUS expression
+    (24) expression -> expression . MINUS expression
+    (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
+
+    GTE             reduce using rule 31 (expression -> expression NE expression .)
+    LTE             reduce using rule 31 (expression -> expression NE expression .)
+    GT              reduce using rule 31 (expression -> expression NE expression .)
+    LT              reduce using rule 31 (expression -> expression NE expression .)
+    EQ              reduce using rule 31 (expression -> expression NE expression .)
+    NE              reduce using rule 31 (expression -> expression NE expression .)
+    $end            reduce using rule 31 (expression -> expression NE expression .)
+    COMMA           reduce using rule 31 (expression -> expression NE expression .)
+    RBRACKET        reduce using rule 31 (expression -> expression NE expression .)
+    RPAREN          reduce using rule 31 (expression -> expression NE expression .)
+    MULTIPLY        shift and go to state 22
+    DIVIDE          shift and go to state 23
+    PLUS            shift and go to state 24
+    MINUS           shift and go to state 25
+    POWER           shift and go to state 26
+
+  ! MULTIPLY        [ reduce using rule 31 (expression -> expression NE expression .) ]
+  ! DIVIDE          [ reduce using rule 31 (expression -> expression NE expression .) ]
+  ! PLUS            [ reduce using rule 31 (expression -> expression NE expression .) ]
+  ! MINUS           [ reduce using rule 31 (expression -> expression NE expression .) ]
+  ! POWER           [ reduce using rule 31 (expression -> expression NE expression .) ]
+  ! GTE             [ shift and go to state 27 ]
+  ! LTE             [ shift and go to state 28 ]
+  ! GT              [ shift and go to state 29 ]
+  ! LT              [ shift and go to state 30 ]
+  ! EQ              [ shift and go to state 31 ]
+  ! NE              [ shift and go to state 32 ]
+
+
+state 60
 
     (6) expression -> LBRACKET array_elements RBRACKET .
 
@@ -1307,13 +2139,19 @@ state 48
     PLUS            reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
     MINUS           reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
     POWER           reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
+    GTE             reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
+    LTE             reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
+    GT              reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
+    LT              reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
+    EQ              reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
+    NE              reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
     $end            reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
     COMMA           reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
     RBRACKET        reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
     RPAREN          reduce using rule 6 (expression -> LBRACKET array_elements RBRACKET .)
 
 
-state 49
+state 61
 
     (7) array_elements -> expression COMMA . array_elements
     (7) array_elements -> . expression COMMA array_elements
@@ -1335,9 +2173,15 @@ state 49
     (23) expression -> . expression PLUS expression
     (24) expression -> . expression MINUS expression
     (25) expression -> . expression POWER expression
-    (26) expression -> . INT
-    (27) expression -> . FLOAT
-    (28) expression -> . NAME
+    (26) expression -> . expression GTE expression
+    (27) expression -> . expression LTE expression
+    (28) expression -> . expression GT expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression EQ expression
+    (31) expression -> . expression NE expression
+    (32) expression -> . INT
+    (33) expression -> . FLOAT
+    (34) expression -> . NAME
 
     LBRACKET        shift and go to state 6
     SIN             shift and go to state 7
@@ -1353,12 +2197,12 @@ state 49
     CEIL            shift and go to state 17
     INT             shift and go to state 18
     FLOAT           shift and go to state 19
-    NAME            shift and go to state 29
+    NAME            shift and go to state 35
 
-    expression                     shift and go to state 28
-    array_elements                 shift and go to state 63
+    expression                     shift and go to state 34
+    array_elements                 shift and go to state 75
 
-state 50
+state 62
 
     (10) expression -> SIN LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1366,16 +2210,28 @@ state 50
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 64
+    RPAREN          shift and go to state 76
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 51
+state 63
 
     (11) expression -> COS LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1383,16 +2239,28 @@ state 51
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 65
+    RPAREN          shift and go to state 77
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 52
+state 64
 
     (12) expression -> TAN LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1400,16 +2268,28 @@ state 52
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 66
+    RPAREN          shift and go to state 78
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 53
+state 65
 
     (13) expression -> SQRT LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1417,16 +2297,28 @@ state 53
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 67
+    RPAREN          shift and go to state 79
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 54
+state 66
 
     (14) expression -> ARCSIN LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1434,16 +2326,28 @@ state 54
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 68
+    RPAREN          shift and go to state 80
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 55
+state 67
 
     (15) expression -> ARCCOS LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1451,16 +2355,28 @@ state 55
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 69
+    RPAREN          shift and go to state 81
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 56
+state 68
 
     (16) expression -> ARCTAN LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1468,16 +2384,28 @@ state 56
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 70
+    RPAREN          shift and go to state 82
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 57
+state 69
 
     (17) expression -> ABS LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1485,16 +2413,28 @@ state 57
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 71
+    RPAREN          shift and go to state 83
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 58
+state 70
 
     (18) expression -> FLOOR LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1502,16 +2442,28 @@ state 58
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 72
+    RPAREN          shift and go to state 84
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 59
+state 71
 
     (19) expression -> ROUND LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1519,16 +2471,28 @@ state 59
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 73
+    RPAREN          shift and go to state 85
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 60
+state 72
 
     (20) expression -> CEIL LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1536,16 +2500,28 @@ state 60
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 74
+    RPAREN          shift and go to state 86
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 61
+state 73
 
     (9) var_assign -> NAME EQUALS expression .
     (21) expression -> expression . MULTIPLY expression
@@ -1553,6 +2529,12 @@ state 61
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
     $end            reduce using rule 9 (var_assign -> NAME EQUALS expression .)
     MULTIPLY        shift and go to state 22
@@ -1560,9 +2542,15 @@ state 61
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 62
+state 74
 
     (5) function -> PRINT LPAREN expression . RPAREN
     (21) expression -> expression . MULTIPLY expression
@@ -1570,23 +2558,35 @@ state 62
     (23) expression -> expression . PLUS expression
     (24) expression -> expression . MINUS expression
     (25) expression -> expression . POWER expression
+    (26) expression -> expression . GTE expression
+    (27) expression -> expression . LTE expression
+    (28) expression -> expression . GT expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . EQ expression
+    (31) expression -> expression . NE expression
 
-    RPAREN          shift and go to state 75
+    RPAREN          shift and go to state 87
     MULTIPLY        shift and go to state 22
     DIVIDE          shift and go to state 23
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     POWER           shift and go to state 26
+    GTE             shift and go to state 27
+    LTE             shift and go to state 28
+    GT              shift and go to state 29
+    LT              shift and go to state 30
+    EQ              shift and go to state 31
+    NE              shift and go to state 32
 
 
-state 63
+state 75
 
     (7) array_elements -> expression COMMA array_elements .
 
     RBRACKET        reduce using rule 7 (array_elements -> expression COMMA array_elements .)
 
 
-state 64
+state 76
 
     (10) expression -> SIN LPAREN expression RPAREN .
 
@@ -1595,13 +2595,19 @@ state 64
     PLUS            reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
     MINUS           reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
     POWER           reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
+    GTE             reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
+    LTE             reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
+    GT              reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
+    LT              reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
+    EQ              reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
+    NE              reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
     $end            reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
     COMMA           reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
     RPAREN          reduce using rule 10 (expression -> SIN LPAREN expression RPAREN .)
 
 
-state 65
+state 77
 
     (11) expression -> COS LPAREN expression RPAREN .
 
@@ -1610,13 +2616,19 @@ state 65
     PLUS            reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
     MINUS           reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
     POWER           reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
+    GTE             reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
+    LTE             reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
+    GT              reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
+    LT              reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
+    EQ              reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
+    NE              reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
     $end            reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
     COMMA           reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
     RPAREN          reduce using rule 11 (expression -> COS LPAREN expression RPAREN .)
 
 
-state 66
+state 78
 
     (12) expression -> TAN LPAREN expression RPAREN .
 
@@ -1625,13 +2637,19 @@ state 66
     PLUS            reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
     MINUS           reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
     POWER           reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
+    GTE             reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
+    LTE             reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
+    GT              reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
+    LT              reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
+    EQ              reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
+    NE              reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
     $end            reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
     COMMA           reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
     RPAREN          reduce using rule 12 (expression -> TAN LPAREN expression RPAREN .)
 
 
-state 67
+state 79
 
     (13) expression -> SQRT LPAREN expression RPAREN .
 
@@ -1640,13 +2658,19 @@ state 67
     PLUS            reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
     MINUS           reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
     POWER           reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
+    GTE             reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
+    LTE             reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
+    GT              reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
+    LT              reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
+    EQ              reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
+    NE              reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
     $end            reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
     COMMA           reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
     RPAREN          reduce using rule 13 (expression -> SQRT LPAREN expression RPAREN .)
 
 
-state 68
+state 80
 
     (14) expression -> ARCSIN LPAREN expression RPAREN .
 
@@ -1655,13 +2679,19 @@ state 68
     PLUS            reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
     MINUS           reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
     POWER           reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
+    GTE             reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
+    LTE             reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
+    GT              reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
+    LT              reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
+    EQ              reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
+    NE              reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
     $end            reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
     COMMA           reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
     RPAREN          reduce using rule 14 (expression -> ARCSIN LPAREN expression RPAREN .)
 
 
-state 69
+state 81
 
     (15) expression -> ARCCOS LPAREN expression RPAREN .
 
@@ -1670,13 +2700,19 @@ state 69
     PLUS            reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
     MINUS           reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
     POWER           reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
+    GTE             reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
+    LTE             reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
+    GT              reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
+    LT              reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
+    EQ              reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
+    NE              reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
     $end            reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
     COMMA           reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
     RPAREN          reduce using rule 15 (expression -> ARCCOS LPAREN expression RPAREN .)
 
 
-state 70
+state 82
 
     (16) expression -> ARCTAN LPAREN expression RPAREN .
 
@@ -1685,13 +2721,19 @@ state 70
     PLUS            reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
     MINUS           reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
     POWER           reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
+    GTE             reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
+    LTE             reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
+    GT              reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
+    LT              reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
+    EQ              reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
+    NE              reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
     $end            reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
     COMMA           reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
     RPAREN          reduce using rule 16 (expression -> ARCTAN LPAREN expression RPAREN .)
 
 
-state 71
+state 83
 
     (17) expression -> ABS LPAREN expression RPAREN .
 
@@ -1700,13 +2742,19 @@ state 71
     PLUS            reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
     MINUS           reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
     POWER           reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
+    GTE             reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
+    LTE             reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
+    GT              reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
+    LT              reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
+    EQ              reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
+    NE              reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
     $end            reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
     COMMA           reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
     RPAREN          reduce using rule 17 (expression -> ABS LPAREN expression RPAREN .)
 
 
-state 72
+state 84
 
     (18) expression -> FLOOR LPAREN expression RPAREN .
 
@@ -1715,13 +2763,19 @@ state 72
     PLUS            reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
     MINUS           reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
     POWER           reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
+    GTE             reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
+    LTE             reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
+    GT              reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
+    LT              reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
+    EQ              reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
+    NE              reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
     $end            reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
     COMMA           reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
     RPAREN          reduce using rule 18 (expression -> FLOOR LPAREN expression RPAREN .)
 
 
-state 73
+state 85
 
     (19) expression -> ROUND LPAREN expression RPAREN .
 
@@ -1730,13 +2784,19 @@ state 73
     PLUS            reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
     MINUS           reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
     POWER           reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
+    GTE             reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
+    LTE             reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
+    GT              reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
+    LT              reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
+    EQ              reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
+    NE              reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
     $end            reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
     COMMA           reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
     RPAREN          reduce using rule 19 (expression -> ROUND LPAREN expression RPAREN .)
 
 
-state 74
+state 86
 
     (20) expression -> CEIL LPAREN expression RPAREN .
 
@@ -1745,13 +2805,19 @@ state 74
     PLUS            reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
     MINUS           reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
     POWER           reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
+    GTE             reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
+    LTE             reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
+    GT              reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
+    LT              reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
+    EQ              reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
+    NE              reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
     $end            reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
     COMMA           reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
     RBRACKET        reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
     RPAREN          reduce using rule 20 (expression -> CEIL LPAREN expression RPAREN .)
 
 
-state 75
+state 87
 
     (5) function -> PRINT LPAREN expression RPAREN .
 

@@ -3,8 +3,6 @@ import ply.yacc as yacc
 import numpy as np
 import sys
 
-
-
 reserved = {
     'if' : 'IF',
     'then' : 'THEN',
@@ -27,11 +25,15 @@ reserved = {
     'ceil' : 'CEIL',
     'env' : 'ENV',
     'print' : 'PRINT',
+    'and' : 'AND',
+    'or' : 'OR',
+    'not' : 'NOT',
+    'true' : 'TRUE',
+    'false' : 'FALSE',
  }
 
 # Create a list to hold all of the token names
 tokens = [
-
     'INT',
     'FLOAT',
     'NAME',
@@ -48,6 +50,13 @@ tokens = [
     'RBRACKET',
     'COMMA',
     'POWER',
+    'GTE',
+    'LTE',
+    'GT',
+    'LT',
+    'NE',
+    'EQ',
+    'NOT', 
 ]
 
 
@@ -56,12 +65,20 @@ tokens = tokens + list(reserved.values())
 
 
 # Use regular expressions to define what each token is
+t_GTE = r'>='
+t_LTE = r'<='
+t_GT = r'>'
+t_LT = r'<'
+t_NE = r'!='
+t_EQ = r'=='
 t_PLUS = r'\+'
 t_MINUS = r'\-'
 t_MULTIPLY = r'\*'
 t_DIVIDE = r'\/'
 t_POWER = r'\^'
 t_EQUALS = r'\='
+
+
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_LBRACE = r'\{'
@@ -70,7 +87,10 @@ t_LBRACKET = r'\['
 t_RBRACKET = r'\]'
 t_COMMA = r'\,'
 
-
+# Define a rule so we can track line numbers
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
 
 # Ply's special t_ignore variable allows us to define characters the lexer will ignore.
 # We're ignoring spaces.
@@ -101,10 +121,6 @@ def t_NAME(t):
         t.type = 'NAME'
     return t
 
-def t_ENV(t):
-    r'env'
-    global env
-    print(env)
 
 # Skip the current token and output 'Illegal characters' using the special Ply t_error function.
 def t_error(t):
@@ -114,14 +130,15 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
+
 # Ensure our parser understands the correct order of operations.
 # The precedence variable is a special Ply variable.
 precedence = (
-
+    ('left', 'GTE', 'LTE', 'GT', 'LT', 'NE', 'EQ'),
+    ('left', 'OR', 'AND'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'MULTIPLY', 'DIVIDE'),
     ('left', 'POWER')
-
 )
 
 # Define our grammar. We allow expressions, var_assign's and empty's.
@@ -132,6 +149,7 @@ def p_calc(p):
          | function
          | empty
     '''
+    print(p[1])
     run(p[1])
 
 def p_function_print(p):
@@ -189,14 +207,21 @@ def p_expression_function(p):
 def p_expression(p):
     '''
     expression : expression MULTIPLY expression
-               | expression DIVIDE expression
-               | expression PLUS expression
-               | expression MINUS expression
-               | expression POWER expression
-
+                | expression DIVIDE expression
+                | expression PLUS expression
+                | expression MINUS expression
+                | expression POWER expression
+                | expression GTE expression
+                | expression LTE expression
+                | expression GT expression
+                | expression LT expression
+                | expression EQ expression
+                | expression NE expression
     '''
     # Build our tree.
     p[0] = (p[2], p[1], p[3])
+    print(p[0])
+
 
 def p_expression_int_float(p):
     '''
@@ -262,6 +287,16 @@ def run(p):
             return np.ceil(run(p[1]))
         elif p[0] == '^':
             return run(p[1]) ** run(p[2])
+        elif p[0] == '>=':
+            return run(p[1]) >= run(p[2])
+        elif p[0] == '<=':
+            return run(p[1]) <= run(p[2])
+        elif p[0] == '>':
+            return run(p[1]) > run(p[2])
+        elif p[0] == '<':
+            return run(p[1]) < run(p[2])
+        elif p[0] == '==':
+            return run(p[1]) == run(p[2])
         elif p[0] == '=':
             env[p[1]] = run(p[2])
         elif p[0] == 'print':
