@@ -152,6 +152,12 @@ def p_code(p):
     for i in p[1][1]:
         run(i)
 
+def p_while_statement(p):
+    '''
+    while_statement : WHILE LPAREN expression RPAREN LBRACE block RBRACE
+    '''
+    p[0] = ("while", p[3], p[6])
+
 def p_if_statement(p):
     '''
     if_expression : IF LPAREN expression RPAREN LBRACE block RBRACE
@@ -179,14 +185,15 @@ def p_line(p):
     '''
     line : expression SEMICOLON
          | var_assign SEMICOLON
-         | function SEMICOLON
+         | function_print SEMICOLON
          | if_expression SEMICOLON
+         | while_statement SEMICOLON 
     '''
     p[0] = p[1]
 
 def p_function_print(p):
     '''
-    function : PRINT LPAREN expression RPAREN
+    function_print : PRINT LPAREN expression RPAREN
     '''
     p[0] = ('print', p[3])
 
@@ -357,6 +364,9 @@ def run(p):
         elif p[0] == 'block':
             for x in p[1]:
                 run(x)
+        elif p[0] == 'while':
+            while run(p[1]):
+                run(p[2])
         elif p[0] == 'var':
             if p[1] not in env:
                 return 'Undeclared variable found!'
