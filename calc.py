@@ -134,8 +134,8 @@ lexer = lex.lex()
 # Ensure our parser understands the correct order of operations.
 # The precedence variable is a special Ply variable.
 precedence = (
-    ('left', 'GTE', 'LTE', 'GT', 'LT', 'NE', 'EQ'),
     ('left', 'OR', 'AND'),
+    ('left', 'GTE', 'LTE', 'GT', 'LT', 'NE', 'EQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'MULTIPLY', 'DIVIDE'),
     ('left', 'POWER')
@@ -217,6 +217,8 @@ def p_expression(p):
                 | expression LT expression
                 | expression EQ expression
                 | expression NE expression
+                | expression AND expression
+                | expression OR expression
     '''
     # Build our tree.
     p[0] = (p[2], p[1], p[3])
@@ -229,6 +231,16 @@ def p_expression_int_float(p):
                | FLOAT
     '''
     p[0] = p[1]
+
+def p_expression_bool(p):
+    '''
+    expression : TRUE
+               | FALSE
+    '''
+    if p[1] == 'true':
+        p[0] = True
+    else:
+        p[0] = False
 
 def p_expression_var(p):
     '''
@@ -297,6 +309,10 @@ def run(p):
             return run(p[1]) < run(p[2])
         elif p[0] == '==':
             return run(p[1]) == run(p[2])
+        elif p[0] == 'and':
+            return run(p[1]) and run(p[2])
+        elif p[0] == 'or':
+            return run(p[1]) or run(p[2])
         elif p[0] == '=':
             env[p[1]] = run(p[2])
         elif p[0] == 'print':
