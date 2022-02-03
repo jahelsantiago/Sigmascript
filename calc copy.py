@@ -142,45 +142,30 @@ precedence = (
     ('left', 'GTE', 'LTE', 'GT', 'LT', 'NE', 'EQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'MULTIPLY', 'DIVIDE'),
-    ('left', 'POWER'),
+    ('left', 'POWER')
 )
-def p_code(p):
-    '''
-    code : if_expression
-            | block
-    '''
-    for i in p[1][1]:
-        run(i)
-
-def p_if_statement(p):
-    '''
-    if_expression : IF LPAREN expression RPAREN LBRACE block RBRACE
-    | IF LPAREN expression RPAREN LBRACE block RBRACE ELSE LBRACE block RBRACE
-    '''
-    if len(p) == 8:
-        p[0] = ('if', p[3], p[6])
-    else:
-        p[0] = ('if', p[3], p[6], p[10])
-
-
 
 def p_block(p):
     '''
-    block :  line block
+    block : line block
             | line
     '''
     if len(p) == 2:
-        p[0] = ("block", [p[1]])
+        p[0] = [p[1]]
     else:
-        p[0] = ("block", [p[1]] + p[2][1])
+        print("Ps-------")
+        print(p[1])
+        print(p[2])
+        p[0] = [p[1]] + p[2]
         
+    print(p[0])
 
 def p_line(p):
     '''
     line : expression SEMICOLON
          | var_assign SEMICOLON
          | function SEMICOLON
-         | if_expression SEMICOLON
+         | empty 
     '''
     p[0] = p[1]
 
@@ -198,7 +183,7 @@ def p_array(p):
 
 def p_array_elements(p):
     '''
-    array_elements : array_elements COMMA expression
+    array_elements : expression COMMA array_elements
                    | expression
     '''
     if len(p) == 2:
@@ -238,51 +223,63 @@ def p_expression_function(p):
 # Expressions are recursive.
 def p_expression(p):
     '''
-    expression : expression MULTIPLY expression
-                | expression DIVIDE expression
-                | expression PLUS expression
-                | expression MINUS expression
-                | expression POWER expression
-                | expression GTE expression
-                | expression LTE expression
-                | expression GT expression
-                | expression LT expression
-                | expression EQ expression
-                | expression NE expression
-                | expression AND expression
-                | expression OR expression
+    operation : operable_values MULTIPLY operable_values
+                | operable_values DIVIDE operable_values
+                | operable_values PLUS operable_values
+                | operable_values MINUS operable_values
+                | operable_values POWER operable_values
     '''
     # Build our tree.
     p[0] = (p[2], p[1], p[3])
 
-
-def p_expression_int_float(p):
+def p_comparacion(p):
     '''
-    expression : INT
-               | FLOAT
+    comparacion : operable_values GTE operable_values
+                | operable_values LTE operable_values
+                | operable_values GT operable_values
+                | operable_values LT operable_values
+                | operable_values EQ operable_values
+                | operable_values NE operable_values
+    '''
+    p[0] = (p[2], p[1], p[3])
+
+
+def p_operable_values(p):
+    '''
+    operable_values : operable_values 
+                    | variable
+                    | boolean_value
     '''
     p[0] = p[1]
 
-def p_expression_bool(p):
+def p_number_value(p):
     '''
-    expression : TRUE
-               | FALSE
+    number_value : INT
+               | FLOAT
+    '''
+    p[0] = float(p[1])
+
+
+def p_boolean_value(p):
+    '''
+    boolean_value : TRUE
+                  | FALSE
     '''
     if p[1] == 'true':
         p[0] = True
     else:
         p[0] = False
 
-def p_expression_var(p):
+def p_variable(p):
     '''
-    expression : NAME
+    variable : NAME
     '''
     p[0] = ('var', p[1])
 
 # Output to the user that there is an error in the input as it doesn't conform to our grammar.
 # p_error is another special Ply function.
 def p_error(p):
-    print("Syntax error found: ", p)
+    print("Syntax error found!")
 
 def p_empty(p):
     '''
@@ -347,16 +344,7 @@ def run(p):
         elif p[0] == '=':
             env[p[1]] = run(p[2])
         elif p[0] == 'print':
-            print(run(p[1]))      
-        elif p[0] == 'if':
-            if run(p[1]):
-                return run(p[2])
-            else:
-                if len(p) > 3:
-                    return run(p[3])
-        elif p[0] == 'block':
-            for x in p[1]:
-                run(x)
+            print(run(p[1]))            
         elif p[0] == 'var':
             if p[1] not in env:
                 return 'Undeclared variable found!'
@@ -392,8 +380,7 @@ if acces_by_file:
         for line in f:
             code += line
     code = code.replace('\n', '')
-    code = code.replace(' ', '')
-
+    print(code)
     parser.parse(code)
 
 
