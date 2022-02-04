@@ -286,23 +286,6 @@ def p_expression_var(p):
     '''
     p[0] = ('var', p[1])
 
-
-
-
-# def p_function_call(p):
-#     '''
-#     expression : NAME LPAREN expression RPAREN
-#     '''
-#     p[0] = ()
-    
-#     def myfunction():
-
-
-
-
-
-
-
 # Output to the user that there is an error in the input as it doesn't conform to our grammar.
 # p_error is another special Ply function.
 def p_error(p):
