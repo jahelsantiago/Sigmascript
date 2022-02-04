@@ -98,6 +98,7 @@ class Model:
 #print(len(modeloZ.M[0]))
 
 #print(modeloZ.operationNum(".","."))
+
 #print(modeloZ.operationNum(".",1))
 #print(modeloZ.operationSet(0,"."))
 #print(modeloZ.operationSet(".",2))
