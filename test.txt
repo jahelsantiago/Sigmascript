@@ -11,4 +11,9 @@ if(true){
 
 some_array = [1,2,3,4];
 
-print(sin(some_array));
+
+function hola(a){
+    print(sin(some_array));
+};
+
+call hola(a);
