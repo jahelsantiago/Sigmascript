@@ -8,3 +8,7 @@ if(true){
 }else{
     print(sin(3+3));
 };
+
+some_array = [1,2,3,4];
+
+print(sin(some_array));

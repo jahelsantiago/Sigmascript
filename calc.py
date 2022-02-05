@@ -211,7 +211,8 @@ def p_array_elements(p):
     if len(p) == 2:
         p[0] = [p[1]]
     else:
-        p[0] = [p[1]] + p[3]
+        print(p[0], p[1], p[2], p[3])
+        p[0] = p[1] + [p[3]]
     
 
 def p_var_assign(p):
