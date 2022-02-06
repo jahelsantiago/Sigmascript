@@ -407,7 +407,7 @@ def run(p):
                 return None
             # Add the arguments to the new environment
             for i in range(len(args)):
-                env[function_values[1][i]] = args[i]
+                env[function_values[1][i]] = env[args[i]]
             run(function_values[2])
         elif p[0] == 'if':
             if run(p[1]):
