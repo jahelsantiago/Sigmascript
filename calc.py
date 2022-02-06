@@ -8,17 +8,12 @@ import alghtms as alg
 
 reserved = {
     'if' : 'IF',
-    'then' : 'THEN',
     'else' : 'ELSE',
     'while' : 'WHILE',
     'sin' : 'SIN',
     'cos' : 'COS',
     'tan' : 'TAN',
     'sqrt' : 'SQRT',
-    'log' : 'LOG',
-    'exp' : 'EXP',
-    'pi' : 'PI',
-    'e' : 'E',
     'arcsin' : 'ARCSIN',
     'arccos' : 'ARCCOS',
     'arctan' : 'ARCTAN',
@@ -26,11 +21,9 @@ reserved = {
     'floor' : 'FLOOR',
     'round' : 'ROUND',
     'ceil' : 'CEIL',
-    'env' : 'ENV',
     'print' : 'PRINT',
     'and' : 'AND',
     'or' : 'OR',
-    'not' : 'NOT',
     'true' : 'TRUE',
     'false' : 'FALSE',
     'function' : 'FUNCTION',
@@ -65,7 +58,6 @@ tokens = [
     'LT',
     'NE',
     'EQ',
-    'NOT', 
     'SEMICOLON',
     'DOT',
 ]
@@ -193,6 +185,7 @@ def p_function_call(p):
     p[0] = ("function_call", p[2], p[4])
 
 
+
 def p_function_parameters(p):
     '''
     function_parameters : NAME
@@ -222,7 +215,7 @@ def p_block(p):
 
 def p_line(p):
     '''
-    line : expression SEMICOLON
+    line : expression SEMICOLON 
          | var_assign SEMICOLON
          | function_print SEMICOLON
          | if_expression SEMICOLON
@@ -397,7 +390,7 @@ def p_expression_var(p):
 # Output to the user that there is an error in the input as it doesn't conform to our grammar.
 # p_error is another special Ply function.
 def p_error(p):
-    print("Syntax error found: ", p)
+    print("Syntax error found", p)
 
 def p_empty(p):
     '''
@@ -587,7 +580,6 @@ if acces_by_file:
     with open('test02.txt') as f:
         for line in f:
             code += line
-    code = code.replace('\n', '')
 
     if not tokenize: 
         parser.parse(code)
