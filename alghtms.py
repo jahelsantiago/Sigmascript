@@ -347,6 +347,8 @@ class Chain:
             self.chain = chain                #string
             self.chainArray = list(chain)     #array of strings
 
+    def __str__(self) -> str:
+        return self.chain
 
     def numberOfSteaks(self):
         if self.chain == "":

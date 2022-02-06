@@ -37,6 +37,7 @@ reserved = {
     'call' : 'CALL',
     'len' : 'LEN',
     'model' : 'MODEL',
+    'chain' : 'CHAIN',
  }
 
 # Create a list to hold all of the token names
@@ -228,6 +229,7 @@ def p_line(p):
          | function_declaration SEMICOLON
          | function_call SEMICOLON 
          | model SEMICOLON
+         | chain SEMICOLON
     '''
     p[0] = p[1]
 
@@ -256,11 +258,6 @@ def p_array_elements(p):
         p[0] = p[1] + [p[3]]
     
 
-def p_declare_mode(p):
-    '''
-    model : MODEL LPAREN NAME COMMA NAME COMMA NAME COMMA NAME RPAREN
-    '''
-    p[0] = ("model", ('var',p[3]), ('var',p[5]), ('var',p[7]), ('var',p[9]))
 
 def p_len(p):
     '''
@@ -272,9 +269,16 @@ def p_var_assign(p):
     '''
     var_assign : NAME EQUALS expression
                  | NAME EQUALS model
+                 | NAME EQUALS chain
     '''
     # Build our tree
     p[0] = ('=', p[1], p[3])
+
+def p_declare_mode(p):
+    '''
+    model : MODEL LPAREN NAME COMMA NAME COMMA NAME COMMA NAME RPAREN
+    '''
+    p[0] = ("model", ('var',p[3]), ('var',p[5]), ('var',p[7]), ('var',p[9]))
 
 def p_model_operations(p):
     '''
@@ -301,9 +305,14 @@ def p_string(p):
            | DOT 
            | INT
            | empty
-
     '''
     p[0] = p[1]
+
+def p_declare_chain(p):
+    '''
+    chain : CHAIN LPAREN NAME RPAREN
+    '''
+    p[0] = ("chain", p[3])
 
 
 def p_expression_function(p):
@@ -474,6 +483,21 @@ def run(p):
                 print(f'Error: object {p[1]} is not defined')
                 return
             return env[p[1]].SteakOperationAvrg(p[2][0], p[2][1], p[2][2])
+        elif p[0] == 'chain':
+            return alg.Chain(p[1])
+        
+        elif p[0] == 'numberOfSteaks':
+            if p[1] not in env:
+                print(f'Error: object {p[1]} is not defined')
+                return
+            return env[p[1]].numberOfSteaks()
+
+        elif p[0] == 'numberOfSteaksUntilIndex':
+            if p[1] not in env:
+                print(f'Error: object {p[1]} is not defined')
+                return
+            return env[p[1]].numberOfSteaksUntilIndex(p[2][0]) 
+        
         elif p[0] == 'function_declaration':
             #p2 are the arguments of the function 
             #p3 are the statements of the function

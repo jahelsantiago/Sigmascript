@@ -26,3 +26,8 @@ print(modeloRachas.SteakOperationAvrg(.,.,.));
 print(modeloRachas.SteakOperationAvrg(1,.,.));
 print(modeloRachas.SteakOperationAvrg(.,1,.));
 print(modeloRachas.SteakOperationAvrg(1,0,.));
+
+cadena = chain(aabccc);
+print(cadena.numberOfSteaks());
+print(cadena.numberOfSteaksUntilIndex(0));
+print(cadena.numberOfSteaksUntilIndex(2));
