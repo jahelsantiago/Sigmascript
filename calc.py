@@ -38,6 +38,7 @@ reserved = {
     'len' : 'LEN',
     'model' : 'MODEL',
     'chain' : 'CHAIN',
+    'printm': 'PRINTM',
  }
 
 # Create a list to hold all of the token names
@@ -232,6 +233,12 @@ def p_line(p):
          | chain SEMICOLON
     '''
     p[0] = p[1]
+
+def p_primt_message(p):
+    '''
+    function_print : PRINTM LPAREN NAME RPAREN
+    '''
+    p[0] = ("printm", p[3])
 
 def p_function_print(p):
     '''
@@ -497,7 +504,8 @@ def run(p):
                 print(f'Error: object {p[1]} is not defined')
                 return
             return env[p[1]].numberOfSteaksUntilIndex(p[2][0]) 
-        
+        elif p[0] == 'printm':
+            print(">>",p[1])
         elif p[0] == 'function_declaration':
             #p2 are the arguments of the function 
             #p3 are the statements of the function
