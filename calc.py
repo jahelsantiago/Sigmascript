@@ -33,6 +33,7 @@ reserved = {
     'false' : 'FALSE',
     'function' : 'FUNCTION',
     'call' : 'CALL',
+    'len' : 'LEN',
  }
 
 # Create a list to hold all of the token names
@@ -106,13 +107,13 @@ t_ignore = r' '
 # are defined using functions.
 # A float is 1 or more numbers followed by a dot (.) followed by 1 or more numbers again.
 def t_FLOAT(t):
-    r'\d+\.\d+'
+    r'-?\d+\.\d+'
     t.value = float(t.value)
     return t
 
 # An int is 1 or more numbers.
 def t_INT(t):
-    r'\d+'
+    r'-?\d+'
     t.value = int(t.value)
     return t
 
@@ -194,6 +195,12 @@ def p_function_parameters(p):
     else:
         p[0] = [p[1]] + p[3]
 
+def p_array_get(p):
+    '''
+    expression : NAME LBRACKET expression RBRACKET
+    '''
+    p[0] = ("array_get", p[1], p[3])
+
 def p_block(p):
     '''
     block :  line block
@@ -239,6 +246,11 @@ def p_array_elements(p):
     else:
         p[0] = p[1] + [p[3]]
     
+def p_len(p):
+    '''
+    expression : LEN LPAREN expression RPAREN
+    '''
+    p[0] = ("len", p[3])
 
 def p_var_assign(p):
     '''
@@ -382,7 +394,11 @@ def run(p):
         elif p[0] == '=':
             env[p[1]] = run(p[2])
         elif p[0] == 'print':
-            print(run(p[1]))     
+            print(run(p[1])) 
+        elif p[0] == 'array_get': 
+            return env[p[1]][run(p[2])]   
+        elif p[0] == 'len':
+            return len(run(p[1]))
         elif p[0] == 'function_declaration':
             #p2 are the arguments of the function 
             #p3 are the statements of the function
