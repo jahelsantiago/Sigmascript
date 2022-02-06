@@ -24,24 +24,27 @@ modelo = Model(alpha,blocks,treatments,m_datos)
 
 modelo2 = Model(alpha,blocks2,treatments2,m_datos2)
 
-
+print("Model1 parameters:")
 print(modelo.M)
 print(modelo.a)
 print(modelo.b)
 print(modelo.t)
 print(modelo.symbolsList)
 
-
+print("Model2 parameters:")
 print(modelo2.M)
 print(modelo2.a)
 print(modelo2.b)
 print(modelo2.t)
 print(modelo2.symbolsList)
 
-print(modelo.operationNum(".","."))
+print("Model1 operation Nume:")
+print(modelo.operationNum(".",".")) 
 print(modelo.operationNum(0,"."))
 print(modelo.operationNum(".",2))
 
+
+print("Model1 OperationSet:")
 print(modelo.operationSet(".","."))
 print(modelo.operationSet(1,"."))
 print(modelo.operationSet(".",0))         

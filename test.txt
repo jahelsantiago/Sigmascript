@@ -5,3 +5,24 @@ m_datos = [[[15.9,-4.0,66.1],[-6.1,3.9],[4.2,-1.3,12.4,5.8]],[[23.8],[4.5,3.6,-0
 
 
 a=model(alpha,blocks,treatments,m_datos);
+
+print(a.operationNum(.,.));
+print(a.operationNum(0,.));
+print(a.operationNum(.,2));
+
+print(a.operationSet(.,.));
+print(a.operationSet(1,.));
+print(a.operationSet(.,0)); 
+
+modeloRachas = a.toSteakModel();
+
+print(modeloRachas.steakOperationSum(1,2,0));
+print(modeloRachas.steakOperationSum(.,.,.));
+print(modeloRachas.steakOperationSum(1,.,.));
+print(modeloRachas.steakOperationSum(.,1,.));
+print(modeloRachas.steakOperationSum(1,2,.));
+
+print(modeloRachas.SteakOperationAvrg(.,.,.));
+print(modeloRachas.SteakOperationAvrg(1,.,.));
+print(modeloRachas.SteakOperationAvrg(.,1,.));
+print(modeloRachas.SteakOperationAvrg(1,0,.));

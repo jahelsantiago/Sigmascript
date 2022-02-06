@@ -65,6 +65,7 @@ tokens = [
     'EQ',
     'NOT', 
     'SEMICOLON',
+    'DOT',
 ]
 
 
@@ -86,7 +87,7 @@ t_DIVIDE = r'\/'
 t_POWER = r'\^'
 t_EQUALS = r'\='
 
-
+t_DOT = r'\.'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_LBRACE = r'\{'
@@ -105,6 +106,8 @@ def t_newline(t):
 # Ply's special t_ignore variable allows us to define characters the lexer will ignore.
 # We're ignoring spaces.
 t_ignore = r' '
+
+
 
 # More complicated tokens, such as tokens that are more than 1 character in length
 # are defined using functions.
@@ -191,7 +194,7 @@ def p_function_call(p):
 def p_function_parameters(p):
     '''
     function_parameters : NAME
-    | NAME COMMA function_parameters
+                        | NAME COMMA function_parameters
     '''
     if len(p) == 2:
         p[0] = [p[1]]
@@ -273,6 +276,34 @@ def p_var_assign(p):
     # Build our tree
     p[0] = ('=', p[1], p[3])
 
+def p_model_operations(p):
+    '''
+    expression : NAME DOT NAME LPAREN model_parameters RPAREN
+    '''
+    #p[3] = name of the function
+    #p[1] = name of the objetc
+    #p[5] = parameters
+    p[0] = (p[3], p[1], p[5])
+
+def p_model_parameters(p):
+    '''
+    model_parameters : string
+                     | string COMMA model_parameters
+    '''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = [p[1]] + p[3]
+
+def p_string(p):
+    '''
+    string : NAME 
+           | DOT 
+           | INT
+           | empty
+
+    '''
+    p[0] = p[1]
 
 
 def p_expression_function(p):
@@ -415,6 +446,34 @@ def run(p):
             return len(run(p[1]))
         elif p[0] == 'model':   
             return alg.Model(run(p[1]), run(p[2]), run(p[3]), run(p[4]))
+        elif p[0] == 'operationNum':
+            #p[0] = name of the function
+            #p[1] = name of the objetc
+            #p[2] = parameters
+            if p[1] not in env:
+                print(f'Error: object {p[1]} is not defined')
+                return
+            return env[p[1]].operationNum(p[2][0], p[2][1])
+        elif p[0] == 'operationSet':
+            if p[1] not in env:
+                print(f'Error: object {p[1]} is not defined')
+                return
+            return env[p[1]].operationSet(p[2][0], p[2][1])
+        elif p[0] == 'toSteakModel':
+            if p[1] not in env:
+                print(f'Error: object {p[1]} is not defined')
+                return
+            return env[p[1]].toSteakModel()
+        elif p[0] == 'steakOperationSum':
+            if p[1] not in env:
+                print(f'Error: object {p[1]} is not defined')
+                return
+            return env[p[1]].steakOperationSum(p[2][0], p[2][1], p[2][2])
+        elif p[0] == 'SteakOperationAvrg':
+            if p[1] not in env:
+                print(f'Error: object {p[1]} is not defined')
+                return
+            return env[p[1]].SteakOperationAvrg(p[2][0], p[2][1], p[2][2])
         elif p[0] == 'function_declaration':
             #p2 are the arguments of the function 
             #p3 are the statements of the function

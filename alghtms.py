@@ -198,6 +198,9 @@ class Model:
 class SteakModel:
     def __init__(self,Z):
             self.Z = Z     #matrix
+
+    def __str__(self):
+        return str(self.Z)
     
     def steakOperationSum(self,i,j,k): #operaciones de SUMA sobre modelo de rachas, 5 operaciones
     
