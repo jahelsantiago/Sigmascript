@@ -313,7 +313,16 @@ def p_string(p):
            | INT
            | empty
     '''
-    p[0] = p[1]
+    if p[1] == None:
+        p[0] = None
+    elif str.isdigit(p[1]) == True:
+        p[0] = int(p[1])
+    elif p[1] == '.':
+        p[0] = '.'
+    elif p[1] == 'empty':
+        p[0] = ''
+    else:
+        p[0] = ("var",p[1])
 
 def p_declare_chain(p):
     '''
@@ -459,7 +468,7 @@ def run(p):
         elif p[0] == 'array_get': 
             return env[p[1]][run(p[2])]   
         elif p[0] == 'len':
-            return len(run(p[1]))
+            return int(len(run(p[1])))
         elif p[0] == 'model':   
             return alg.Model(run(p[1]), run(p[2]), run(p[3]), run(p[4]))
         elif p[0] == 'operationNum':
@@ -469,13 +478,13 @@ def run(p):
             if p[1] not in env:
                 print(f'Error: object {p[1]} is not defined')
                 return
-            return env[p[1]].operationNum(p[2][0], p[2][1])
+            return env[p[1]].operationNum(run(p[2][0]), run(p[2][1]))
         elif p[0] == 'operationSet':
             if p[1] not in env:
                 print(f'Error: object {p[1]} is not defined')
                 return
-            return env[p[1]].operationSet(p[2][0], p[2][1])
-        elif p[0] == 'toSteakModel':
+            return env[p[1]].operationSet(run(p[2][0]), run(p[2][1]))
+        elif p[0] == 'toStreakModel':
             if p[1] not in env:
                 print(f'Error: object {p[1]} is not defined')
                 return
@@ -484,12 +493,12 @@ def run(p):
             if p[1] not in env:
                 print(f'Error: object {p[1]} is not defined')
                 return
-            return env[p[1]].steakOperationSum(p[2][0], p[2][1], p[2][2])
+            return env[p[1]].steakOperationSum(run(p[2][0]), run(p[2][1]), run(p[2][2]))
         elif p[0] == 'SteakOperationAvrg':
             if p[1] not in env:
                 print(f'Error: object {p[1]} is not defined')
                 return
-            return env[p[1]].SteakOperationAvrg(p[2][0], p[2][1], p[2][2])
+            return env[p[1]].SteakOperationAvrg(run(p[2][0]), run(p[2][1]), run(p[2][2]))
         elif p[0] == 'chain':
             return alg.Chain(p[1])
         
@@ -546,7 +555,7 @@ def run(p):
                 run(p[2])
         elif p[0] == 'var':
             if p[1] not in env:
-                return 'Undeclared variable found!'
+                return 'Undeclared variable found!' + p[1]
             else:
                 return env[p[1]]
     else:
@@ -575,7 +584,7 @@ while not acces_by_file:
 ##read a file and parse it
 if acces_by_file:
     code = ""
-    with open('test.txt') as f:
+    with open('test02.txt') as f:
         for line in f:
             code += line
     code = code.replace('\n', '')
