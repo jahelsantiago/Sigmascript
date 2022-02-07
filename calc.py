@@ -1,3 +1,4 @@
+from fileinput import lineno
 from operator import le
 import ply.lex as lex
 import ply.yacc as yacc
@@ -131,7 +132,7 @@ def t_NAME(t):
 
 # Skip the current token and output 'Illegal characters' using the special Ply t_error function.
 def t_error(t):
-    print("Illegal character '%s' " % t.value[0])
+    print(f"Lexical error found: Illegal character '{t.value[0]}' in line {t.lineno}")
     t.lexer.skip(1)
 
 # Build the lexer
@@ -390,7 +391,7 @@ def p_expression_var(p):
 # Output to the user that there is an error in the input as it doesn't conform to our grammar.
 # p_error is another special Ply function.
 def p_error(p):
-    print("Syntax error found", p)
+    print("Syntax error found: ", p)
 
 def p_empty(p):
     '''
