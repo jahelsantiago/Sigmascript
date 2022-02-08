@@ -16,7 +16,7 @@ print(a.operationSet(1,.));
 print(a.operationSet(.,0)); 
 
 printm(modelo_rachas);
-modeloRachas = a.toSteakModel();
+modeloRachas = a.toStreakModel();
 print(modeloRachas);
 
 printm(Operaciones_de_rachas);

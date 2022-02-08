@@ -381,4 +381,9 @@ class Chain:
         
             
 
+# import  matplotlib.pyplot as plt
+# def plotValues(values, titulo):
+#     plt.plot(values)
+#     plt.title(titulo)
+
 

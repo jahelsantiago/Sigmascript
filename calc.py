@@ -309,6 +309,8 @@ def p_string(p):
     '''
     if p[1] == None:
         p[0] = None
+    elif type(p[1]) == int:
+        p[0] = p[1]
     elif str.isdigit(p[1]) == True:
         p[0] = int(p[1])
     elif p[1] == '.':
@@ -578,7 +580,7 @@ while not acces_by_file:
 ##read a file and parse it
 if acces_by_file:
     code = ""
-    with open('test02.txt') as f:
+    with open('test.txt') as f:
         for line in f:
             code += line
 
