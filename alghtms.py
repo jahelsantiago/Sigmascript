@@ -379,6 +379,22 @@ class Chain:
                         counter += 1
             return counter    
         
+class PlotData:
+    def __init__(self, values, plot_name):
+        self.values = values
+        self.plot_name = plot_name
+
+        if type(values) != list:
+            print("Error de creación: El primer parámetro debe ser un arreglo de flotantes.")
+        
+        if type(plot_name) != str:
+            print("Error de creación: El segundo parámetro debe ser un string")
+
+    def showPlot(self):
+        plt.plot(self.values)
+        plt.title(self.plot_name)
+        plt.draw()
+        plt.show()
             
 
 

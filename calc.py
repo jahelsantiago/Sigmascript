@@ -578,7 +578,7 @@ while not acces_by_file:
 ##read a file and parse it
 if acces_by_file:
     code = ""
-    with open('test02.txt') as f:
+    with open('Testing/t04_mixedError.txt') as f:
         for line in f:
             code += line
 
