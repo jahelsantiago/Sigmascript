@@ -3,6 +3,7 @@
 
 #los retornos "" o -1 ahcen referencia a un error, probablemente escritura erronea
 
+import matplotlib.pyplot as plt
 
 
 class Model:
@@ -379,7 +380,23 @@ class Chain:
                         counter += 1
             return counter    
         
+
+
+import numpy as np
+
+def showPlot(values, plot_name):
+    print("oosososososo")
+    if type(values) != list:
+        print("Error de creación: El primer parámetro debe ser un arreglo de flotantes.")
+    
+    if type(plot_name) != str:
+        print("Error de creación: El segundo parámetro debe ser un string")
+    plt.plot(values)
+    plt.title(plot_name)
+    plt.draw()
+    plt.savefig(f"{plot_name}.png")
             
+
 
 # import  matplotlib.pyplot as plt
 # def plotValues(values, titulo):
